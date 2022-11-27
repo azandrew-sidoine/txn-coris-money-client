@@ -40,14 +40,14 @@ class TransactionResult implements ProcessTransactionResultInterface
 
     /**
      * 
-     * @param TransactionPaymentInterface $payment 
+     * @param TransactionPaymentInterface|null $payment 
      * @param mixed $code 
      * @param string $message 
      * @param mixed $pTxnId
      * @param string|null $processedAt
      */
     public function __construct(
-        TransactionPaymentInterface $payment,
+        TransactionPaymentInterface $payment = null,
         $code,
         string $message,
         $pTxnId,
@@ -72,7 +72,7 @@ class TransactionResult implements ProcessTransactionResultInterface
 
     public function getReference()
     {
-        return $this->payment->getReference();
+        return $this->payment ? $this->payment->getReference() : null;
     }
 
     public function processedAt()

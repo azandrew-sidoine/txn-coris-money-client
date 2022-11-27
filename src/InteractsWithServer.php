@@ -10,7 +10,7 @@ use UnexpectedValueException;
 
 trait InteractsWithServer
 {
-    use HasApiEndpoints, HasApiCredentials;
+    use HasApiEndpoints, HasApiCredentials, ParsesResponse;
 
     public function requestOTP(string $payeerid)
     {
@@ -18,8 +18,7 @@ trait InteractsWithServer
         if ((null === $iso) || (null === $number)) {
             throw new UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
         }
-        // TODO : Take a look a the documentation for the hash string when rerquesting OTP
-        $client = $this->geClientInfo(
+        $this->getClientInfo(
             $iso,
             $number,
             $hash = $this->createHashString(
@@ -31,7 +30,6 @@ trait InteractsWithServer
                 )
             )
         );
-        // TODO : Get client information
         $this->resetCurl();
 
         // We create the REST endpoint by appending the request query to the request path
@@ -47,7 +45,6 @@ trait InteractsWithServer
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'Accept-Encoding' => 'gzip, deflate',
                 'hashParam' => $hash,
                 'clientId' => $this->getApiClient()
             ]
@@ -56,7 +53,7 @@ trait InteractsWithServer
             throw new RequestException("/GET $endpoint : Unknown Request error", $statusCode);
         }
         $response = $this->decodeRequestResponse(
-            $this->curl->getErrorMessage(),
+            $this->curl->getResponse(),
             $this->parseHeaders($this->curl->getResponseHeaders())
         );
         if (!is_array($response)) {
@@ -77,7 +74,7 @@ trait InteractsWithServer
      * @throws RuntimeException 
      * @throws RequestException 
      */
-    public function geClientInfo(string $iso, string $number, string $hash = null)
+    public function getClientInfo(string $iso, string $number, string $hash = null)
     {
         // TODO : Take a look a the documentation for the hash string when rerquesting OTP
         $hash = $hash ?? $this->createHashString(sprintf("%s%s%s", $iso, $number, $this->getApiToken()));
@@ -97,7 +94,6 @@ trait InteractsWithServer
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'Accept-Encoding' => 'gzip, deflate',
                 'hashParam' => $hash,
                 // TODO : Provide a better implementation of querying the client id,
                 'clientId' => $this->getApiClient()
@@ -107,11 +103,11 @@ trait InteractsWithServer
             throw new RequestException("/GET $endpoint : Unknown Request error", $statusCode);
         }
         $response = $this->decodeRequestResponse(
-            $this->curl->getErrorMessage(),
+            $this->curl->getResponse(),
             $this->parseHeaders($this->curl->getResponseHeaders())
         );
         if (null !== ($text = ($response['text'] ?? null)) && is_string($text)) {
-            // TODO : Parse the text attribute using the simple xml library to get the client details
+            return simplexml_load_string($text);
         }
         throw new RequestException("/GET $endpoint : " . $response['msg'] ?? 'Unkown request error');
     }
@@ -162,9 +158,7 @@ trait InteractsWithServer
             'url' => $endpoint,
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Accept-Encoding' => 'gzip, deflate',
                 'hashParam' => $hash,
-                // TODO : Provide a better implementation of querying the client id
                 'clientId' => $this->getApiClient()
             ]
         ]);
@@ -172,7 +166,7 @@ trait InteractsWithServer
             throw new RequestException("/POST $endpoint : Unknown Request error", $statusCode);
         }
         $response = $this->decodeRequestResponse(
-            $this->curl->getErrorMessage(),
+            $this->curl->getResponse(),
             $this->parseHeaders($this->curl->getResponseHeaders())
         );
         if (!is_array($response)) {
@@ -214,7 +208,6 @@ trait InteractsWithServer
             'method' => 'GET',
             'url' => $endpoint,
             'headers' => [
-                'Accept-Encoding' => 'gzip, deflate',
                 'clientId' => $this->getApiClient()
             ]
         ]);
@@ -236,13 +229,13 @@ trait InteractsWithServer
      */
     private function splitPayeerId(string $payeerid)
     {
-        $exploded = -1 !== stripos($payeerid, '-') ? explode('-', $payeerid, 2) : explode(' ', $payeerid);
+        $exploded = false !== stripos($payeerid, '-') ? explode('-', $payeerid, 2) : explode(' ', $payeerid);
         if (count($exploded) === 2) {
             list($iso_code, $phone_number) = $exploded;
-            $iso_code = $iso_code[0] === '+' ? "00" . substr($iso_code, 1) : (substr($iso_code, 0, 2) === '00' ? $iso_code : "00$iso_code");
+            $iso_code = $iso_code[0] === '+' ? substr($iso_code, 1) : (substr($iso_code, 0, 2) === '00' ? substr($iso_code, 2) : "$iso_code");
             return [$iso_code, $phone_number];
         }
-        return ['00228', $exploded[0]];
+        return [null, $exploded[0]];
     }
 
     /**

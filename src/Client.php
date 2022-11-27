@@ -17,7 +17,7 @@ class Client implements
     TransactionalProcessorLibraryInterface
 {
 
-    use ParsesResponse, InteractsWithServer, HasApiCredentials, HasApiEndpoints;
+    use InteractsWithServer, HasApiCredentials, HasApiEndpoints;
 
     /**
      * List of transaction response listeners
@@ -35,29 +35,29 @@ class Client implements
     /**
      * Creates a {@see \Drewlabs\Txn\Coris\Client} instance
      * 
-     * @param string $host 
+     * @param string|null $host 
      * @param mixed $credentials 
      * @param EndpointsInterface|null $endpoints 
      * @return void 
      * @throws InvalidArgumentException 
      */
     public function __construct(
-        string $host,
+        string $host = null,
         $credentials = null,
         EndpointsInterface $endpoints = null
     ) {
         $this->curl = new Curl($host);
         $this->endpoints = $endpoints;
         if ((null !== $credentials) &&
-            (!($instanceofCredentialFactory = ($credentials instanceof CredentialsFactory)) ||
+            (!($instanceofCredentialFactory = ($credentials instanceof CredentialsFactory)) &&
                 !($instanceofCredentials = ($credentials instanceof CredentialsInterface)))
         ) {
             throw new InvalidArgumentException('Expect instance of ' . CredentialsFactory::class . ' or ' . CredentialsInterface::class . ', got ' . (is_object($credentials) ? get_class($credentials) : gettype($credentials)));
         }
-        if ($instanceofCredentialFactory) {
+        if (isset($instanceofCredentialFactory) && (true === $instanceofCredentialFactory)) {
             $this->credentialsFactory = $credentials;
         }
-        if ($instanceofCredentials) {
+        if (isset($instanceofCredentials) && (true === $instanceofCredentials)) {
             $this->credentials = $credentials;
         }
     }
@@ -94,6 +94,7 @@ class Client implements
     {
         // First we release the current client resources
         $this->curl->release();
+        $this->curl->init();
         // Disable ssl verification to avoid any SSL error
         $this->curl->disableSSLVerification();
         $this->curl->setOption(CURLOPT_RETURNTRANSFER, true);
@@ -105,7 +106,7 @@ class Client implements
      * @param string $content 
      * @return string|false 
      */
-    private function computeHash(string $content)
+    public function computeHash(string $content)
     {
         return hash('sha256', $content, false);
     }

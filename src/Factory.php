@@ -1,5 +1,7 @@
 <?php
 
+namespace Drewlabs\Txn\Coris;
+
 use Drewlabs\Libman\Contracts\AuthBasedLibraryConfigInterface;
 use Drewlabs\Libman\Contracts\LibraryConfigInterface;
 use Drewlabs\Libman\Contracts\LibraryFactoryInterface;
@@ -21,7 +23,7 @@ class Factory implements LibraryFactoryInterface
      */
     public static function createInstance(LibraryConfigInterface $config)
     {
-        $credentials = ($config instanceof AuthBasedLibraryConfigInterface) && ($auth = $config->getAuth()) ? new Credentials($auth->id(), $auth->secret()) : null;
+        $credentials = ($config instanceof AuthBasedLibraryConfigInterface) && ($auth = $config->getAuth()) ? new Credentials($auth->id(), $auth->secret()) : Credentials::empty();
         $host = ($config instanceof WebServiceLibraryConfigInterface) ? $config->getHost() : null;
         return new Client($host, $credentials, Endpoints::defaults());
     }

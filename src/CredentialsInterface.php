@@ -7,14 +7,14 @@ interface CredentialsInterface
     /**
      * Returns the authorization client secret/token
      * 
-     * @return string 
+     * @return string|null
      */
-    public function getApiToken(): string;
+    public function getApiToken();
 
     /**
      * Returns the authorization client key
      * 
-     * @return string 
+     * @return string|null
      */
-    public function getApiKey(): string;
+    public function getApiKey();
 }

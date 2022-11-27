@@ -2,13 +2,15 @@
 
 namespace Drewlabs\Txn\Coris;
 
+use ReflectionException;
+
 class Credentials implements CredentialsInterface
 {
     /**
      * 
      * @var string
      */
-    private $id;
+    private $key;
 
     /**
      * 
@@ -19,22 +21,47 @@ class Credentials implements CredentialsInterface
     /**
      * Creates a credentials instance
      * 
-     * @param string $id 
-     * @param string $secret 
+     * @param string $id        API Client
+     * @param string $secret    API Token
      */
-    public function __construct($id, string $secret)
+    public function __construct($key, string $secret)
     {
-        $this->id = $id;
+        $this->key = $key;
         $this->token = $secret;
     }
 
-    public function getApiToken(): string
+    /**
+     * Creates an instance of {@see \Drewlabs\Txn\Coris\Credentials} with key and token
+     * properties having default (null) values
+     * 
+     * @return self 
+     * @throws ReflectionException 
+     */
+    public static function empty()
+    {
+        $instance = (new \ReflectionClass(__CLASS__))->newInstanceWithoutConstructor();
+        return $instance;
+    }
+
+    public function setApiKey(string $value)
+    {
+        $this->key = $value;
+        return $this;
+    }
+
+    public function setApiToken(string $value)
+    {
+        $this->token = $value;
+        return $this;
+    }
+
+    public function getApiToken()
     {
         return $this->token;
     }
 
-    public function getApiKey(): string
+    public function getApiKey()
     {
-        return $this->id;
+        return $this->key;
     }
 }

@@ -45,13 +45,23 @@ trait HasApiCredentials
         return $this->credentials;
     }
 
-    private function getApiToken()
+    /**
+     * Returns the client api token credential
+     * 
+     * @return string 
+     */
+    public function getApiToken()
     {
         return $this->getCredentials()
             ->getApiToken();
     }
 
-    private function getApiClient()
+    /**
+     * Returns the client api key credential
+     * 
+     * @return string 
+     */ 
+    public function getApiClient()
     {
         return $this->getCredentials()
             ->getApiKey();

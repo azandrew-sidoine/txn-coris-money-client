@@ -54,7 +54,7 @@ class Endpoints implements EndpointsInterface
         return new self(
             '/external/v1/api/operations/paiement-bien',
             '/external/v1/api/send-code-otp',
-            'external/v1/api/infos-client',
+            '/external/v1/api/infos-client',
             '/external/v1/api/hash256'
         );
     }
