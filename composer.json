@@ -1,0 +1,33 @@
+{
+    "name": "drewlabs/txn-coris-client",
+    "description": "CorisMoney Payment platform webservice Txn SDK implementation",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Drewlabs\\Txn\\Coris\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "\\Drewlabs\\Txn\\Coris\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "azandrew-sidoine",
+            "email": "asmyns.platonnas29@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.0",
+        "drewlabs/curl-client": "^0.1.3",
+        "drewlabs/txn-contracts": "^0.1.0",
+        "drewlabs/libman": "^0.1.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=6.0"
+    }
+}
