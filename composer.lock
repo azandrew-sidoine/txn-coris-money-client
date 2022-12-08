@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "drewlabs/curl-client",
-            "version": "v0.1.7",
+            "version": "v0.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azandrew-sidoine/drewlabs-curl-client.git",
-                "reference": "ec99c6e6b2b8f4f73fda62d01b636099716da55a"
+                "reference": "18f7c76ae2e04c602a3aa15c5b340b4b201ceace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azandrew-sidoine/drewlabs-curl-client/zipball/ec99c6e6b2b8f4f73fda62d01b636099716da55a",
-                "reference": "ec99c6e6b2b8f4f73fda62d01b636099716da55a",
+                "url": "https://api.github.com/repos/azandrew-sidoine/drewlabs-curl-client/zipball/18f7c76ae2e04c602a3aa15c5b340b4b201ceace",
+                "reference": "18f7c76ae2e04c602a3aa15c5b340b4b201ceace",
                 "shasum": ""
             },
             "require": {
@@ -59,9 +59,9 @@
             ],
             "support": {
                 "issues": "https://github.com/azandrew-sidoine/drewlabs-curl-client/issues",
-                "source": "https://github.com/azandrew-sidoine/drewlabs-curl-client/tree/v0.1.7"
+                "source": "https://github.com/azandrew-sidoine/drewlabs-curl-client/tree/v0.1.8"
             },
-            "time": "2022-12-08T18:30:03+00:00"
+            "time": "2022-12-08T18:38:03+00:00"
         },
         {
             "name": "drewlabs/libman",
