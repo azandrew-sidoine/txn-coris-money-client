@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a42a93c93c1a8b67e786df9942b0d45",
+    "content-hash": "6195d8acf1f3d442e5a8a2637afd1076",
     "packages": [
         {
             "name": "drewlabs/curl-client",
@@ -65,16 +65,16 @@
         },
         {
             "name": "drewlabs/libman",
-            "version": "v0.1.7",
+            "version": "v0.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azandrew-sidoine/php-libman.git",
-                "reference": "ee2a18fd2729a667cc95f06e641bd00f3856402d"
+                "reference": "8a161c7ae046cb2cb97798e8dc013ed692bfca11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azandrew-sidoine/php-libman/zipball/ee2a18fd2729a667cc95f06e641bd00f3856402d",
-                "reference": "ee2a18fd2729a667cc95f06e641bd00f3856402d",
+                "url": "https://api.github.com/repos/azandrew-sidoine/php-libman/zipball/8a161c7ae046cb2cb97798e8dc013ed692bfca11",
+                "reference": "8a161c7ae046cb2cb97798e8dc013ed692bfca11",
                 "shasum": ""
             },
             "require": {
@@ -110,9 +110,9 @@
             "description": "Libman package is a small PHP utility library used in installing, creating business specific class instance using configuration based approach",
             "support": {
                 "issues": "https://github.com/azandrew-sidoine/php-libman/issues",
-                "source": "https://github.com/azandrew-sidoine/php-libman/tree/v0.1.7"
+                "source": "https://github.com/azandrew-sidoine/php-libman/tree/v0.1.8"
             },
-            "time": "2022-11-24T16:26:15+00:00"
+            "time": "2022-12-08T19:59:50+00:00"
         },
         {
             "name": "drewlabs/txn-contracts",
