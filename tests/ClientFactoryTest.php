@@ -20,14 +20,14 @@ class ClientFactoryTest extends TestCase
                 'coris-monet-client',
                 'composer',
                 'https://testbed.corismoney.com',
-                '$2a$10$JpGsCNuqTznfONRCNRPZCeVjVkztgMoE32RHoCvAabImznwPN2NXS',
-                'CNSS'
+                'Test',
+                'Test'
             )
         );
         $this->assertInstanceOf(Client::class, $client);
         $this->assertInstanceOf(ProcessorLibraryInterface::class, $client);
-        $this->assertEquals($client->getApiClient(), 'CNSS');
-        $this->assertEquals($client->getApiToken(), '$2a$10$JpGsCNuqTznfONRCNRPZCeVjVkztgMoE32RHoCvAabImznwPN2NXS');
+        $this->assertEquals($client->getApiClient(), 'Test');
+        $this->assertEquals($client->getApiToken(), 'Test');
     }
 
     public function test_factory_create_instance_with_basic_library_config()

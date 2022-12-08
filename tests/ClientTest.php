@@ -6,6 +6,7 @@ use Drewlabs\Txn\Coris\Core\ClientInfo;
 use Drewlabs\Txn\Coris\Core\CorisGlobals;
 use Drewlabs\Txn\Coris\Core\Credentials;
 use Drewlabs\Txn\Coris\Tests\TransactionPaymentStub;
+use Drewlabs\Txn\Exceptions\RequestException;
 use Drewlabs\Txn\ProcessTransactionResultInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +19,7 @@ class ClientTest extends TestCase
     {
         if (self::$configured !== true) {
             CorisGlobals::getInstance()->setCredentialsFactory(function() {
-                return new Credentials('CNSS', '$2a$10$JpGsCNuqTznfONRCNRPZCeVjVkztgMoE32RHoCvAabImznwPN2NXS');
+                return new Credentials('Test', 'Test');
             });
         }
         ($test)();
@@ -76,6 +77,7 @@ class ClientTest extends TestCase
 
     public function test_coris_client_request_client_infos()
     {
+        $this->expectException(RequestException::class);
         $this->runUnitTests(function() {
             $client = new Client('https://testbed.corismoney.com');
             $result = $client->getClientInfo('228', '92146591');
@@ -86,8 +88,7 @@ class ClientTest extends TestCase
 
     public function test_coris_client_request_process_txn_payment()
     {
-        $this->expectException(\Drewlabs\Txn\Exceptions\InvalidProcessorOTPException::class);
-        $this->expectExceptionMessage('Processor otp (OTP Incorrect.) is invalid');
+        $this->expectException(RequestException::class);
         $this->runUnitTests(function() {
             $times = 0;
             $result = null;

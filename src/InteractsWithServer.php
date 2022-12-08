@@ -194,6 +194,9 @@ trait InteractsWithServer
         if ((-1 === intval($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'OTP Incorrect'))) {
             throw new InvalidProcessorOTPException($response['message'] ?? $response['msg'] ?? 'Unknown request error');
         }
+        if ((null === ($response['code'] ?? null)) || (null === ($response['transactionId'] ?? null))) {
+            throw new RequestException("/GET $endpoint : " . ($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
+        }
         $result = $this->toProcessTransactionResult(array_merge($response ?? [], ['payment' => $txn]));
         if (!empty($this->responseListeners)) {
             /**
