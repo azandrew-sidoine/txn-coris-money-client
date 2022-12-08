@@ -2,33 +2,11 @@
 
 namespace Drewlabs\Txn\Coris;
 
+use Drewlabs\Txn\Coris\Core\CorisGlobals;
+use Drewlabs\Txn\Coris\Core\CredentialsInterface;
+
 trait HasApiCredentials
 {
-
-    /**
-     * 
-     * @var CredentialsFactory
-     */
-    private $credentialsFactory;
-
-    /**
-     * 
-     * @var CredentialsInterface
-     */
-    private $credentials;
-
-    /**
-     * Set the credentials property of this instance
-     * 
-     * @param EndpointsInterface $endpoints
-     * 
-     * @return static 
-     */
-    public function setCredentials(CredentialsInterface $credentials)
-    {
-        $this->credentials = $credentials;
-        return $this;
-    }
 
     /**
      * Getter for the credentials property of this instance
@@ -37,12 +15,7 @@ trait HasApiCredentials
      */
     public function getCredentials()
     {
-        if ((null === $this->credentials) &&
-            ($this->credentialsFactory instanceof CredentialsFactory)
-        ) {
-            $this->credentials = ($this->credentialsFactory)();
-        }
-        return $this->credentials;
+        return CorisGlobals::getInstance()->getCredentials();
     }
 
     /**

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0a487db9ece7bd9f34b8209b7864ad0",
+    "content-hash": "9a42a93c93c1a8b67e786df9942b0d45",
     "packages": [
         {
             "name": "drewlabs/curl-client",
@@ -116,16 +116,16 @@
         },
         {
             "name": "drewlabs/txn-contracts",
-            "version": "v0.1.2",
+            "version": "v0.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azandrew-sidoine/php-txn-contracts.git",
-                "reference": "ac63149c3fed54eddaf82845b3a7af828dd15481"
+                "reference": "53d198f47cd90cfb752eec464f61ce22d427ccc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azandrew-sidoine/php-txn-contracts/zipball/ac63149c3fed54eddaf82845b3a7af828dd15481",
-                "reference": "ac63149c3fed54eddaf82845b3a7af828dd15481",
+                "url": "https://api.github.com/repos/azandrew-sidoine/php-txn-contracts/zipball/53d198f47cd90cfb752eec464f61ce22d427ccc7",
+                "reference": "53d198f47cd90cfb752eec464f61ce22d427ccc7",
                 "shasum": ""
             },
             "require-dev": {
@@ -150,22 +150,22 @@
             "description": "Transaction platform contract package",
             "support": {
                 "issues": "https://github.com/azandrew-sidoine/php-txn-contracts/issues",
-                "source": "https://github.com/azandrew-sidoine/php-txn-contracts/tree/v0.1.2"
+                "source": "https://github.com/azandrew-sidoine/php-txn-contracts/tree/v0.1.4"
             },
-            "time": "2022-11-24T20:51:06+00:00"
+            "time": "2022-12-08T16:37:55+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v6.1.3",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "a6506e99cfad7059b1ab5cab395854a0a0c21292"
+                "reference": "ba6e55359f8f755fe996c58a81e00eaa67a35877"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/a6506e99cfad7059b1ab5cab395854a0a0c21292",
-                "reference": "a6506e99cfad7059b1ab5cab395854a0a0c21292",
+                "url": "https://api.github.com/repos/symfony/process/zipball/ba6e55359f8f755fe996c58a81e00eaa67a35877",
+                "reference": "ba6e55359f8f755fe996c58a81e00eaa67a35877",
                 "shasum": ""
             },
             "require": {
@@ -197,7 +197,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v6.1.3"
+                "source": "https://github.com/symfony/process/tree/v6.2.0"
             },
             "funding": [
                 {
@@ -213,7 +213,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-27T17:24:16+00:00"
+            "time": "2022-11-02T09:08:04+00:00"
         }
     ],
     "packages-dev": [

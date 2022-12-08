@@ -2,9 +2,12 @@
 
 namespace Drewlabs\Txn\Coris\Tests;
 
+use Drewlabs\Txn\TransactionalPaymentInterface;
 use Drewlabs\Txn\TransactionPaymentInterface;
 
-class TransactionPaymentStub implements TransactionPaymentInterface
+class TransactionPaymentStub implements
+    TransactionPaymentInterface,
+    TransactionalPaymentInterface
 {
     /**
      * 
@@ -30,12 +33,29 @@ class TransactionPaymentStub implements TransactionPaymentInterface
      */
     private $id;
 
-    public function __construct(string $from, string $ref, float $value = 10000, string $id = null)
-    {
+    /**
+     * 
+     * @var string
+     */
+    private $otp;
+
+    public function __construct(
+        string $from,
+        string $ref,
+        float $value = 10000,
+        string $id = null,
+        string $otp = null
+    ) {
         $this->from = $from;
         $this->ref = $ref;
         $this->value = $value;
         $this->id = $id;
+        $this->otp = $otp;
+    }
+
+    public function getOTP()
+    {
+        return $this->otp;
     }
 
     public function getFrom()

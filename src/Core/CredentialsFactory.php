@@ -1,6 +1,6 @@
 <?php
 
-namespace Drewlabs\Txn\Coris;
+namespace Drewlabs\Txn\Coris\Core;
 
 interface CredentialsFactory
 {

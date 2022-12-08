@@ -2,6 +2,10 @@
 
 namespace Drewlabs\Txn\Coris;
 
+use Drewlabs\Txn\Coris\Core\ClientInfo;
+use Drewlabs\Txn\Coris\Core\CorisGlobals;
+use Drewlabs\Txn\Exceptions\InvalidProcessorOTPException;
+use Drewlabs\Txn\Exceptions\MissingClientAccountException;
 use Drewlabs\Txn\Exceptions\ProcessTxnRequestException;
 use Drewlabs\Txn\Exceptions\RequestException;
 use Drewlabs\Txn\TransactionalPaymentInterface;
@@ -66,13 +70,18 @@ trait InteractsWithServer
     }
 
     /**
+     * Query for a client info on coris money platform
+     * 
+     * {@inheritDoc}
      * 
      * @param string $iso 
      * @param string $number 
      * @param string|null $hash 
-     * @return object 
-     * @throws RuntimeException 
+     * @return ClientInfo 
      * @throws RequestException 
+     * @throws RequestException 
+     * @throws MissingClientAccountException 
+     * @throws MissingClientAccountException 
      */
     public function getClientInfo(string $iso, string $number, string $hash = null)
     {
@@ -106,10 +115,16 @@ trait InteractsWithServer
             $this->curl->getResponse(),
             $this->parseHeaders($this->curl->getResponseHeaders())
         );
-        if (null !== ($text = ($response['text'] ?? null)) && is_string($text)) {
-            return simplexml_load_string($text);
+        if (1 === intval($response['code'] ?? null)) {
+            throw new RequestException("/GET $endpoint: " . ($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
         }
-        throw new RequestException("/GET $endpoint : " . $response['msg'] ?? 'Unkown request error');
+        if ((-1 === intval($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'client inexistant'))) {
+            throw new MissingClientAccountException("/GET $endpoint: " . ($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
+        }
+        if ((null !== ($text = ($response['text'] ?? null)) && is_string($text))) {
+            return ClientInfo::create(simplexml_load_string($text));
+        }
+        throw new RequestException("/GET $endpoint : " . ($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
     }
 
     /**
@@ -135,8 +150,7 @@ trait InteractsWithServer
                 $iso,
                 $number,
                 /* Check if the codePV is not the transaction reference */
-                // $this->getAccountPv()
-                $accountPvCode = (string)($transaction->getReference()) /* Code PV */,
+                $accountPvCode = CorisGlobals::getInstance()->codePv() /* Code PV */,
                 $amount = $txn->getValue(),
                 $otp = $txn->getOTP(),
                 $this->getApiToken()
@@ -175,6 +189,10 @@ trait InteractsWithServer
 
         if (1 === intval($response['code'] ?? null)) {
             throw new ProcessTxnRequestException($txn, "/POST $endpoint: " . $response['message'] ?? $response['msg'] ?? 'Unknown request error');
+        }
+
+        if ((-1 === intval($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'OTP Incorrect'))) {
+            throw new InvalidProcessorOTPException($response['message'] ?? $response['msg'] ?? 'Unknown request error');
         }
         $result = $this->toProcessTransactionResult(array_merge($response ?? [], ['payment' => $txn]));
         if (!empty($this->responseListeners)) {

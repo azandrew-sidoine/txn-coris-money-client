@@ -1,7 +1,10 @@
 <?php
 
 use Drewlabs\Txn\Coris\Client;
-use Drewlabs\Txn\Coris\Credentials;
+use Drewlabs\Txn\Coris\Core\ClientAccount;
+use Drewlabs\Txn\Coris\Core\ClientInfo;
+use Drewlabs\Txn\Coris\Core\CorisGlobals;
+use Drewlabs\Txn\Coris\Core\Credentials;
 use Drewlabs\Txn\Coris\Tests\TransactionPaymentStub;
 use Drewlabs\Txn\ProcessTransactionResultInterface;
 use PHPUnit\Framework\TestCase;
@@ -9,68 +12,103 @@ use PHPUnit\Framework\TestCase;
 class ClientTest extends TestCase
 {
 
-    private function createClientCredentials()
+    private static $configured = false;
+
+    public function runUnitTests(\Closure $test)
     {
-        return new Credentials('CNSS', '$2a$10$JpGsCNuqTznfONRCNRPZCeVjVkztgMoE32RHoCvAabImznwPN2NXS');
+        if (self::$configured !== true) {
+            CorisGlobals::getInstance()->setCredentialsFactory(function() {
+                return new Credentials('CNSS', '$2a$10$JpGsCNuqTznfONRCNRPZCeVjVkztgMoE32RHoCvAabImznwPN2NXS');
+            });
+        }
+        ($test)();
     }
+
 
     public function test_client_constructor_runs_without_error()
     {
-        $client = new Client('http://localhost:8888');
-        $this->assertInstanceOf(Client::class, $client);
-    }
-
-    public function test_client_constructor_throws_exception_if_second_argument_does_not_match_supported_types()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        new Client('http://localhost:8888', new \stdClass);
+        $this->runUnitTests(function() {
+            $client = new Client('http://localhost:8888');
+            $this->assertInstanceOf(Client::class, $client);
+        });
     }
 
     public function test_client_to_process_transaction_result()
     {
-        $client = new Client('http://localhost:8888');
-        $result = $client->toProcessTransactionResult(['code' => -1, 'transactionId' => null]);
-
-        $this->assertInstanceOf(ProcessTransactionResultInterface::class, $result);
-        $this->assertEquals(false, $result->isValidated());
-        $this->assertEquals(null, $result->getProcessorReference());
-        $this->assertEquals('Unknown Error!', $result->getStatusText());
+        $this->runUnitTests(function() {
+            $client = new Client('http://localhost:8888');
+            $result = $client->toProcessTransactionResult(['code' => -1, 'transactionId' => null]);
+    
+            $this->assertInstanceOf(ProcessTransactionResultInterface::class, $result);
+            $this->assertEquals(false, $result->isValidated());
+            $this->assertEquals(null, $result->getProcessorReference());
+            $this->assertEquals('Unknown Error!', $result->getStatusText());
+        });
     }
 
     public function test_client_create_hash_string()
     {
-        $client = new Client('https://testbed.corismoney.com', $this->createClientCredentials());
-        $hash = $client->createHashString(sprintf("%s%s%s", '228', '91969456', $client->getApiToken()));
-        $this->assertTrue(is_string($hash));
-        $this->assertEquals($client->computeHash(sprintf("%s%s%s", '228', '91969456', $client->getApiToken())), $hash);
+        $this->runUnitTests(function() {
+            $client = new Client('https://testbed.corismoney.com');
+            $hash = $client->createHashString(sprintf("%s%s%s", '228', '91969456', $client->getApiToken()));
+            $this->assertTrue(is_string($hash));
+            $this->assertEquals($client->computeHash(sprintf("%s%s%s", '228', '91969456', $client->getApiToken())), $hash);
+        });
     }
 
     public function test_client_request_otp_throws_unexpected_value_exception_if_payeer_id_does_not_conform_required_format()
     {
-        $this->expectException(UnexpectedValueException::class);
-        $client = new Client('https://testbed.corismoney.com', $this->createClientCredentials());
-        $client->requestOTP('22891969456');
+        $this->runUnitTests(function() {
+            $this->expectException(UnexpectedValueException::class);
+            $client = new Client('https://testbed.corismoney.com');
+            $client->requestOTP('22661347475');
+        });
     }
 
-    public function test_client_request_otp()
-    {
-        $client = new Client('https://testbed.corismoney.com', $this->createClientCredentials());
-        $result = $client->requestOTP('228 92146591');
-        $this->assertTrue(is_bool($result));
-    }
+    // public function test_coris_client_request_otp()
+    // {
+    //     $this->runUnitTests(function() {
+    //         $client = new Client('https://testbed.corismoney.com');
+    //         $result = $client->requestOTP('228 92146591');
+    //         $this->assertTrue(is_bool($result));
+    //     });
+    // }
 
     public function test_coris_client_request_client_infos()
     {
-        $client = new Client('https://testbed.corismoney.com', $this->createClientCredentials());
-        $result = $client->getClientInfo('228', '92146591');
-        $this->assertTrue(is_object($result));
+        $this->runUnitTests(function() {
+            $client = new Client('https://testbed.corismoney.com');
+            $result = $client->getClientInfo('228', '92146591');
+            $this->assertTrue($result instanceof ClientInfo);
+            $this->assertTrue($result->account() instanceof ClientAccount);
+        });
     }
 
     public function test_coris_client_request_process_txn_payment()
     {
-        $client = new Client('https://testbed.corismoney.com', $this->createClientCredentials());
-        $result = $client->processTransaction(new TransactionPaymentStub('228 92146591', $this->guidv4(), 50000, $this->guidv4()));
-        $this->assertTrue(is_bool($result));
+        $this->expectException(\Drewlabs\Txn\Exceptions\InvalidProcessorOTPException::class);
+        $this->expectExceptionMessage('Processor otp (OTP Incorrect.) is invalid');
+        $this->runUnitTests(function() {
+            $times = 0;
+            $result = null;
+            $client = new Client('https://testbed.corismoney.com');
+            $client->addTransactionResponseLister(function($value) use (&$times, &$result) {
+                $result = $value;
+                $times += 1;
+            });
+            $result = $client->processTransaction(
+                new TransactionPaymentStub(
+                    '228 92146591',
+                    $this->guidv4(),
+                    100,
+                    $this->guidv4(),
+                    '47949'
+                )
+            );
+            $this->assertEquals(1, $times, 'Expect the listener callback to be called at least once if request was successful');
+            $this->assertTrue(null !== $result);
+            $this->assertTrue(is_bool($result));
+        });
     }
 
     public function guidv4($data = null)

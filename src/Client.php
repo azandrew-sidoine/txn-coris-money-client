@@ -9,7 +9,6 @@ use Drewlabs\Txn\TransactionPaymentInterface;
 use Drewlabs\Curl\Client as Curl;
 use Drewlabs\Txn\TransactionResultListener;
 use InvalidArgumentException;
-use Drewlabs\Txn\Coris\CredentialsFactory;
 
 class Client implements
     ProcessorLibraryInterface,
@@ -17,7 +16,7 @@ class Client implements
     TransactionalProcessorLibraryInterface
 {
 
-    use InteractsWithServer, HasApiCredentials, HasApiEndpoints;
+    use InteractsWithServer;
 
     /**
      * List of transaction response listeners
@@ -36,30 +35,16 @@ class Client implements
      * Creates a {@see \Drewlabs\Txn\Coris\Client} instance
      * 
      * @param string|null $host 
-     * @param mixed $credentials 
      * @param EndpointsInterface|null $endpoints 
      * @return void 
      * @throws InvalidArgumentException 
      */
     public function __construct(
         string $host = null,
-        $credentials = null,
         EndpointsInterface $endpoints = null
     ) {
         $this->curl = new Curl($host);
         $this->endpoints = $endpoints;
-        if ((null !== $credentials) &&
-            (!($instanceofCredentialFactory = ($credentials instanceof CredentialsFactory)) &&
-                !($instanceofCredentials = ($credentials instanceof CredentialsInterface)))
-        ) {
-            throw new InvalidArgumentException('Expect instance of ' . CredentialsFactory::class . ' or ' . CredentialsInterface::class . ', got ' . (is_object($credentials) ? get_class($credentials) : gettype($credentials)));
-        }
-        if (isset($instanceofCredentialFactory) && (true === $instanceofCredentialFactory)) {
-            $this->credentialsFactory = $credentials;
-        }
-        if (isset($instanceofCredentials) && (true === $instanceofCredentials)) {
-            $this->credentials = $credentials;
-        }
     }
 
     public function toProcessTransactionResult($response)

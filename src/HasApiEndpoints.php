@@ -4,7 +4,6 @@ namespace Drewlabs\Txn\Coris;
 
 trait HasApiEndpoints
 {
-
     /**
      * 
      * @var EndpointsInterface|null

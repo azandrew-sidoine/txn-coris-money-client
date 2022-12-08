@@ -1,19 +1,17 @@
 <?php
 
-namespace Drewlabs\Txn\Coris;
+namespace Drewlabs\Txn\Coris\Core;
 
 use ReflectionException;
 
 class Credentials implements CredentialsInterface
 {
     /**
-     * 
      * @var string
      */
     private $key;
 
     /**
-     * 
      * @var string
      */
     private $token;
