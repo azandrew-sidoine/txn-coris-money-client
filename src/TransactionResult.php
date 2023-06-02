@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Drewlabs package.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Txn\Coris;
 
 use Drewlabs\Txn\ProcessTransactionResultInterface;
@@ -7,43 +18,34 @@ use Drewlabs\Txn\TransactionPaymentInterface;
 
 class TransactionResult implements ProcessTransactionResultInterface
 {
-
     /**
-     * 
      * @var TransactionPaymentInterface
      */
     private $payment;
 
     /**
-     * 
      * @var string|int
      */
     private $code;
 
     /**
-     * 
      * @var string
      */
     private $message;
 
     /**
-     * 
      * @var string|int
      */
     private $pTxnId;
 
     /**
-     * 
      * @var int|string
      */
     private $processedAt;
 
     /**
-     * 
-     * @param TransactionPaymentInterface|null $payment 
-     * @param mixed $code 
-     * @param string $message 
-     * @param mixed $pTxnId
+     * @param mixed       $code
+     * @param mixed       $pTxnId
      * @param string|null $processedAt
      */
     public function __construct(
@@ -62,7 +64,7 @@ class TransactionResult implements ProcessTransactionResultInterface
 
     public function isValidated()
     {
-        return intval($this->code) === 0;
+        return 0 === (int) $this->code;
     }
 
     public function getProcessorReference()
@@ -90,7 +92,7 @@ class TransactionResult implements ProcessTransactionResultInterface
         return [
             'code' => $this->code,
             'message' => $this->message,
-            'transactionId' => $this->pTxnId
+            'transactionId' => $this->pTxnId,
         ];
     }
 }

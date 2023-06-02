@@ -1,76 +1,78 @@
 <?php
 
-namespace Drewlabs\Txn\Coris\Core;
+declare(strict_types=1);
 
-use SimpleXMLElement;
+/*
+ * This file is part of the Drewlabs package.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Drewlabs\Txn\Coris\Core;
 
 class ClientInfo
 {
     /**
-     * Client agency id
-     * 
+     * Client agency id.
+     *
      * @var string|int
      */
     private $agence;
 
     /**
-     * Client firstname
-     * 
+     * Client firstname.
+     *
      * @var string
      */
     private $firstname;
 
     /**
-     * Client lastname
-     * 
+     * Client lastname.
+     *
      * @var string
      */
     private $lastname;
 
     /**
-     * Client sex or gender
-     * 
+     * Client sex or gender.
+     *
      * @var string
      */
     private $sex;
 
     /**
-     * Client identity document name
-     * 
+     * Client identity document name.
+     *
      * @var string
      */
     private $iddoc;
 
     /**
-     * Client reference
-     * 
+     * Client reference.
+     *
      * @var string
      */
     private $reference;
 
     /**
-     * Client type
-     * 
+     * Client type.
+     *
      * @var string
      */
     private $type;
 
     /**
-     * 
      * @var ClientAccount
      */
     private $account;
 
     /**
-     * Creates a client info instance
-     * 
-     * @param mixed $agence 
-     * @param string $type 
-     * @param string $firstname 
-     * @param string $lastname 
-     * @param string|null $sex 
-     * @param ClientAccount|null $account 
-     * @param string|null $ref 
+     * Creates a client info instance.
+     *
+     * @param mixed $agence
      */
     public function __construct(
         $agence,
@@ -91,14 +93,13 @@ class ClientInfo
     }
 
     /**
-     * Creates a class intance from Simple xml object
-     * 
-     * @param SimpleXMLElement $xml 
-     * @return static 
+     * Creates a class intance from Simple xml object.
+     *
+     * @return static
      */
     public static function create(\SimpleXMLElement $xml)
     {
-        $object =  new static(
+        $object = new static(
             $xml->{'codeAgence'}->__toString(),
             $xml->{'typeClient'},
             $xml->{'prenom'},
@@ -114,115 +115,116 @@ class ClientInfo
     }
 
     /**
-     * Agence getter and setter
-     * 
-     * @param mixed $value 
-     * @return string|int 
+     * Agence getter and setter.
+     *
+     * @param mixed $value
+     *
+     * @return string|int
      */
     public function agence($value = null)
     {
         if (null !== $value) {
-            $this->agence = (string)$value;
+            $this->agence = (string) $value;
         }
+
         return $this->agence;
     }
 
     /**
-     * Firstname getter and setter
-     * 
-     * @param string|null $value 
-     * @return string 
+     * Firstname getter and setter.
+     *
+     * @return string
      */
     public function firstname(string $value = null)
     {
         if (null !== $value) {
-            $this->firstname = (string)$value;
+            $this->firstname = (string) $value;
         }
+
         return $this->firstname;
     }
 
     /**
-     * Lastname getter and setter
-     * 
-     * @param string|null $value 
-     * @return string 
+     * Lastname getter and setter.
+     *
+     * @return string
      */
     public function lastname(string $value = null)
     {
         if (null !== $value) {
-            $this->lastname = (string)$value;
+            $this->lastname = (string) $value;
         }
+
         return $this->lastname;
     }
 
     /**
-     * Sex getter and setter
-     * 
-     * @param string|null $value 
-     * @return string 
+     * Sex getter and setter.
+     *
+     * @return string
      */
     public function sex(string $value = null)
     {
         if (null !== $value) {
-            $this->sex = (string)$value;
+            $this->sex = (string) $value;
         }
+
         return $this->sex;
     }
 
     /**
-     * Identity document getter and setter
-     * 
-     * @param string|null $value 
-     * @return string 
+     * Identity document getter and setter.
+     *
+     * @return string
      */
     public function iddoc(string $value = null)
     {
         if (null !== $value) {
-            $this->iddoc = (string)$value;
+            $this->iddoc = (string) $value;
         }
+
         return $this->iddoc;
     }
 
     /**
-     * Client reference getter and setter
-     * 
-     * @param string|null $value 
-     * @return string 
+     * Client reference getter and setter.
+     *
+     * @return string
      */
     public function ref(string $value = null)
     {
         if (null !== $value) {
-            $this->reference = (string)$value;
+            $this->reference = (string) $value;
         }
+
         return $this->reference;
     }
 
     /**
-     * Client type getter and setter
-     * 
-     * @param string|null $value 
-     * @return string 
+     * Client type getter and setter.
+     *
+     * @return string
      */
     public function type(string $value = null)
     {
         if (null !== $value) {
-            $this->type = (string)$value;
+            $this->type = (string) $value;
         }
+
         return $this->type;
     }
 
     /**
-     * Client account object getter and setter
-     * 
-     * @param ClientAccount|null $value
-     * 
-     * @return string 
+     * Client account object getter and setter.
+     *
+     * @return string
      */
     public function account(ClientAccount $value = null)
     {
         if (null !== $value) {
             $this->account = $value;
         }
+
         return $this->account;
     }
 }

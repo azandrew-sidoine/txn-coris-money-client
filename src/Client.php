@@ -1,43 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Drewlabs package.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Txn\Coris;
 
+use Drewlabs\Curl\Client as Curl;
 use Drewlabs\Txn\OneWayTransactionProcessorInterface;
 use Drewlabs\Txn\ProcessorLibraryInterface;
 use Drewlabs\Txn\TransactionalProcessorLibraryInterface;
 use Drewlabs\Txn\TransactionPaymentInterface;
-use Drewlabs\Curl\Client as Curl;
 use Drewlabs\Txn\TransactionResultListener;
-use InvalidArgumentException;
 
-class Client implements
-    ProcessorLibraryInterface,
-    OneWayTransactionProcessorInterface,
-    TransactionalProcessorLibraryInterface
+class Client implements ProcessorLibraryInterface, OneWayTransactionProcessorInterface, TransactionalProcessorLibraryInterface
 {
-
     use InteractsWithServer;
 
     /**
-     * List of transaction response listeners
+     * List of transaction response listeners.
      *
      * @var array
      */
     private $responseListeners = [];
 
     /**
-     * 
      * @var Curl
      */
     private $curl;
 
     /**
-     * Creates a {@see \Drewlabs\Txn\Coris\Client} instance
-     * 
-     * @param string|null $host 
-     * @param EndpointsInterface|null $endpoints 
-     * @return void 
-     * @throws InvalidArgumentException 
+     * Creates a {@see \Drewlabs\Txn\Coris\Client} instance.
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function __construct(
         string $host = null,
@@ -71,9 +75,19 @@ class Client implements
     }
 
     /**
-     * Reset the curl client to it default options
-     * 
-     * @return void 
+     * Computes a hash string from the plain text value.
+     *
+     * @return string|false
+     */
+    public function computeHash(string $content)
+    {
+        return hash('sha256', $content, false);
+    }
+
+    /**
+     * Reset the curl client to it default options.
+     *
+     * @return void
      */
     private function resetCurl()
     {
@@ -82,17 +96,6 @@ class Client implements
         $this->curl->init();
         // Disable ssl verification to avoid any SSL error
         $this->curl->disableSSLVerification();
-        $this->curl->setOption(CURLOPT_RETURNTRANSFER, true);
-    }
-
-    /**
-     * Computes a hash string from the plain text value
-     * 
-     * @param string $content 
-     * @return string|false 
-     */
-    public function computeHash(string $content)
-    {
-        return hash('sha256', $content, false);
+        $this->curl->setOption(\CURLOPT_RETURNTRANSFER, true);
     }
 }

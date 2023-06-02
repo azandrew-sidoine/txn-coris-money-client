@@ -1,40 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Drewlabs package.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Txn\Coris\Tests;
 
 use Drewlabs\Txn\TransactionalPaymentInterface;
 use Drewlabs\Txn\TransactionPaymentInterface;
 
-class TransactionPaymentStub implements
-    TransactionPaymentInterface,
-    TransactionalPaymentInterface
+class TransactionPaymentStub implements TransactionPaymentInterface, TransactionalPaymentInterface
 {
     /**
-     * 
      * @var string
      */
     private $from;
 
     /**
-     * 
      * @var string
      */
     private $ref;
 
     /**
-     * 
      * @var float|int
      */
     private $value;
 
     /**
-     * 
      * @var string|null
      */
     private $id;
 
     /**
-     * 
      * @var string
      */
     private $otp;

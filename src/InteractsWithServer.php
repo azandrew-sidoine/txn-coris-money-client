@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Drewlabs package.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Txn\Coris;
 
 use Drewlabs\Txn\Coris\Core\ClientInfo;
@@ -10,24 +21,25 @@ use Drewlabs\Txn\Exceptions\ProcessTxnRequestException;
 use Drewlabs\Txn\Exceptions\RequestException;
 use Drewlabs\Txn\TransactionalPaymentInterface;
 use Drewlabs\Txn\TransactionPaymentInterface;
-use UnexpectedValueException;
 
 trait InteractsWithServer
 {
-    use HasApiEndpoints, HasApiCredentials, ParsesResponse;
+    use HasApiCredentials;
+    use HasApiEndpoints;
+    use ParsesResponse;
 
     public function requestOTP(string $payeerid)
     {
-        list($iso, $number) = $this->splitPayeerId($payeerid);
+        [$iso, $number] = $this->splitPayeerId($payeerid);
         if ((null === $iso) || (null === $number)) {
-            throw new UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
+            throw new \UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
         }
         $this->getClientInfo(
             $iso,
             $number,
             $hash = $this->createHashString(
                 sprintf(
-                    "%s%s%s",
+                    '%s%s%s',
                     $iso,
                     $number,
                     $this->getApiToken()
@@ -37,9 +49,9 @@ trait InteractsWithServer
         $this->resetCurl();
 
         // We create the REST endpoint by appending the request query to the request path
-        $endpoint = $this->getEndpoints()->forOTP() . "?" . \http_build_query([
+        $endpoint = $this->getEndpoints()->forOTP().'?'.http_build_query([
             'codePays' => $iso,
-            'telephone' => $number
+            'telephone' => $number,
         ], '', '&', \PHP_QUERY_RFC3986);
 
         // Sends the request to the coris webservice host
@@ -50,8 +62,8 @@ trait InteractsWithServer
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'hashParam' => $hash,
-                'clientId' => $this->getApiClient()
-            ]
+                'clientId' => $this->getApiClient(),
+            ],
         ]);
         if (200 !== ($statusCode = $this->curl->getStatusCode())) {
             throw new RequestException("/GET $endpoint : Unknown Request error", $statusCode);
@@ -60,40 +72,38 @@ trait InteractsWithServer
             $this->curl->getResponse(),
             $this->parseHeaders($this->curl->getResponseHeaders())
         );
-        if (!is_array($response)) {
+        if (!\is_array($response)) {
             throw new RequestException("/GET $endpoint : Server return a bad response");
         }
-        if (null !== ($text = ($response['text'] ?? null)) && is_string($text)) {
+        if (null !== ($text = ($response['text'] ?? null)) && \is_string($text)) {
             return true;
         }
-        throw new RequestException("/GET $endpoint : " . $response['msg'] ?? 'Unkown request error');
+        throw new RequestException("/GET $endpoint : ".$response['msg'] ?? 'Unkown request error');
     }
 
     /**
-     * Query for a client info on coris money platform
-     * 
+     * Query for a client info on coris money platform.
+     *
      * {@inheritDoc}
-     * 
-     * @param string $iso 
-     * @param string $number 
-     * @param string|null $hash 
-     * @return ClientInfo 
-     * @throws RequestException 
-     * @throws RequestException 
-     * @throws MissingClientAccountException 
-     * @throws MissingClientAccountException 
+     *
+     * @throws RequestException
+     * @throws RequestException
+     * @throws MissingClientAccountException
+     * @throws MissingClientAccountException
+     *
+     * @return ClientInfo
      */
     public function getClientInfo(string $iso, string $number, string $hash = null)
     {
         // TODO : Take a look a the documentation for the hash string when rerquesting OTP
-        $hash = $hash ?? $this->createHashString(sprintf("%s%s%s", $iso, $number, $this->getApiToken()));
+        $hash ??= $this->createHashString(sprintf('%s%s%s', $iso, $number, $this->getApiToken()));
         // TODO : Get client information
         $this->resetCurl();
 
         // We create the REST endpoint by appending the request query to the request path
-        $endpoint = $this->getEndpoints()->forClientInfo() . '?' . \http_build_query([
+        $endpoint = $this->getEndpoints()->forClientInfo().'?'.http_build_query([
             'codePays' => $iso,
-            'telephone' => $number
+            'telephone' => $number,
         ], '', '&', \PHP_QUERY_RFC3986);
 
         // Sends the request to the coris webservice host
@@ -105,8 +115,8 @@ trait InteractsWithServer
                 'Accept' => 'application/json',
                 'hashParam' => $hash,
                 // TODO : Provide a better implementation of querying the client id,
-                'clientId' => $this->getApiClient()
-            ]
+                'clientId' => $this->getApiClient(),
+            ],
         ]);
         if (200 !== ($statusCode = $this->curl->getStatusCode())) {
             throw new RequestException("/GET $endpoint : Unknown Request error", $statusCode);
@@ -115,38 +125,38 @@ trait InteractsWithServer
             $this->curl->getResponse(),
             $this->parseHeaders($this->curl->getResponseHeaders())
         );
-        if (1 === intval($response['code'] ?? null)) {
-            throw new RequestException("/GET $endpoint: " . ($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
+        if (1 === (int) ($response['code'] ?? null)) {
+            throw new RequestException("/GET $endpoint: ".($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
         }
-        if ((-1 === intval($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'client inexistant'))) {
-            throw new MissingClientAccountException("/GET $endpoint: " . ($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
+        if ((-1 === (int) ($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'client inexistant'))) {
+            throw new MissingClientAccountException("/GET $endpoint: ".($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
         }
-        if ((null !== ($text = ($response['text'] ?? null)) && is_string($text))) {
+        if (null !== ($text = ($response['text'] ?? null)) && \is_string($text)) {
             return ClientInfo::create(simplexml_load_string($text));
         }
-        throw new RequestException("/GET $endpoint : " . ($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
+        throw new RequestException("/GET $endpoint : ".($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
     }
 
     /**
      * Send a request to corisMoney /POST /external/v1/api/operations/paiement-bien
-     * to process the txn
-     * 
-     * @param TransactionPaymentInterface $transaction 
-     * @return true 
-     * @throws UnexpectedValueException 
-     * @throws RequestException 
-     * @throws ProcessTxnRequestException 
+     * to process the txn.
+     *
+     * @throws \UnexpectedValueException
+     * @throws RequestException
+     * @throws ProcessTxnRequestException
+     *
+     * @return true
      */
     public function doProcessTxnPayment(TransactionPaymentInterface $transaction)
     {
-        list($iso, $number) = $this->resolvePayeerRequiredAttributes($transaction);
+        [$iso, $number] = $this->resolvePayeerRequiredAttributes($transaction);
         /**
          * @var TransactionalPaymentInterface&TransactionPaymentInterface
          */
         $txn = $transaction;
         $hash = $this->createHashString(
             sprintf(
-                "%s%s%s%s%s%s",
+                '%s%s%s%s%s%s',
                 $iso,
                 $number,
                 /* Check if the codePV is not the transaction reference */
@@ -158,12 +168,12 @@ trait InteractsWithServer
         );
         $this->resetCurl();
         // We create the REST endpoint by appending the request query to the request path
-        $endpoint = $this->getEndpoints()->forTxnPayment() . "?" . \http_build_query([
+        $endpoint = $this->getEndpoints()->forTxnPayment().'?'.http_build_query([
             'codePays' => $iso,
             'telephone' => $number,
             'codePv' => $accountPvCode,
             'montant' => $amount,
-            'codeOTP' => $otp
+            'codeOTP' => $otp,
         ], '', '&', \PHP_QUERY_RFC3986);
 
         // Sends the request to the coris webservice host
@@ -173,8 +183,8 @@ trait InteractsWithServer
             'headers' => [
                 'Content-Type' => 'application/json',
                 'hashParam' => $hash,
-                'clientId' => $this->getApiClient()
-            ]
+                'clientId' => $this->getApiClient(),
+            ],
         ]);
         if (200 !== ($statusCode = $this->curl->getStatusCode())) {
             throw new RequestException("/POST $endpoint : Unknown Request error", $statusCode);
@@ -183,19 +193,19 @@ trait InteractsWithServer
             $this->curl->getResponse(),
             $this->parseHeaders($this->curl->getResponseHeaders())
         );
-        if (!is_array($response)) {
+        if (!\is_array($response)) {
             throw new RequestException("/POST $endpoint : Server return a bad response");
         }
 
-        if (1 === intval($response['code'] ?? null)) {
-            throw new ProcessTxnRequestException($txn, "/POST $endpoint: " . $response['message'] ?? $response['msg'] ?? 'Unknown request error');
+        if (1 === (int) ($response['code'] ?? null)) {
+            throw new ProcessTxnRequestException($txn, "/POST $endpoint: ".$response['message'] ?? $response['msg'] ?? 'Unknown request error');
         }
 
-        if ((-1 === intval($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'OTP Incorrect'))) {
+        if ((-1 === (int) ($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'OTP Incorrect'))) {
             throw new InvalidProcessorOTPException($response['message'] ?? $response['msg'] ?? 'Unknown request error');
         }
         if ((null === ($response['code'] ?? null)) || (null === ($response['transactionId'] ?? null))) {
-            throw new RequestException("/GET $endpoint : " . ($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
+            throw new RequestException("/GET $endpoint : ".($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
         }
         $result = $this->toProcessTransactionResult(array_merge($response ?? [], ['payment' => $txn]));
         if (!empty($this->responseListeners)) {
@@ -206,15 +216,16 @@ trait InteractsWithServer
                 $callback($result);
             }
         }
+
         return true;
     }
 
     /**
-     * Creates a hash string from a plain text string
-     * 
-     * @param string $plainText 
-     * @return string 
-     * @throws RequestException 
+     * Creates a hash string from a plain text string.
+     *
+     * @throws RequestException
+     *
+     * @return string
      */
     public function createHashString(string $plainText)
     {
@@ -223,14 +234,14 @@ trait InteractsWithServer
         if (null === ($hash = $this->getEndpoints()->forHash())) {
             return $this->computeHash($plainText);
         }
-        $endpoint = $hash . "?originalString=$plainText";
+        $endpoint = $hash."?originalString=$plainText";
         $this->resetCurl();
         $this->curl->send([
             'method' => 'GET',
             'url' => $endpoint,
             'headers' => [
-                'clientId' => $this->getApiClient()
-            ]
+                'clientId' => $this->getApiClient(),
+            ],
         ]);
         if (200 !== ($statusCode = $this->curl->getStatusCode())) {
             throw new RequestException("/GET $endpoint : Request error", $statusCode);
@@ -239,42 +250,42 @@ trait InteractsWithServer
         if (empty($response = $this->curl->getResponse())) {
             throw new RequestException("/GET $endpoint : Bad Response, expected response to be a valid PHP string");
         }
+
         return $response;
     }
 
-
     /**
-     * 
-     * @param string $payeerid 
-     * @return string[] 
+     * @return string[]
      */
     private function splitPayeerId(string $payeerid)
     {
         $exploded = false !== stripos($payeerid, '-') ? explode('-', $payeerid, 2) : explode(' ', $payeerid);
-        if (count($exploded) === 2) {
-            list($iso_code, $phone_number) = $exploded;
-            $iso_code = $iso_code[0] === '+' ? substr($iso_code, 1) : (substr($iso_code, 0, 2) === '00' ? substr($iso_code, 2) : "$iso_code");
+        if (2 === \count($exploded)) {
+            [$iso_code, $phone_number] = $exploded;
+            $iso_code = '+' === $iso_code[0] ? substr($iso_code, 1) : ('00' === substr($iso_code, 0, 2) ? substr($iso_code, 2) : "$iso_code");
+
             return [$iso_code, $phone_number];
         }
+
         return [null, $exploded[0]];
     }
 
     /**
-     * 
-     * @param TransactionPaymentInterface $transaction 
-     * @return array 
-     * @throws UnexpectedValueException 
+     * @throws \UnexpectedValueException
+     *
+     * @return array
      */
     private function resolvePayeerRequiredAttributes(TransactionPaymentInterface $transaction)
     {
         $payeerid = $transaction->getFrom();
-        list($iso, $number) = $this->splitPayeerId($payeerid);
+        [$iso, $number] = $this->splitPayeerId($payeerid);
         if ((null === $iso) || (null === $number)) {
-            throw new UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
+            throw new \UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
         }
         if (!($transaction instanceof TransactionalPaymentInterface)) {
-            throw new UnexpectedValueException("Cannot process transaction: " . $transaction->getId());
+            throw new \UnexpectedValueException('Cannot process transaction: '.$transaction->getId());
         }
+
         return [$iso, $number, $payeerid];
     }
 }

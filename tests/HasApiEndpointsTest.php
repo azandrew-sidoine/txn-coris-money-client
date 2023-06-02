@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Drewlabs package.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Drewlabs\Txn\Coris\Endpoints;
 use Drewlabs\Txn\Coris\Tests\HasApiEndpointsStub;
 use PHPUnit\Framework\TestCase;
@@ -8,23 +19,23 @@ class HasApiEndpointsTest extends TestCase
 {
     public function test_has_api_endpoints_get_endpoints()
     {
-        $object = new HasApiEndpointsStub;
+        $object = new HasApiEndpointsStub();
         $object->useDefaultEndpoints();
-        $this->assertEquals('/external/v1/api/operations/paiement-bien', $object->getEndpoints()->forTxnPayment());
-        $this->assertEquals('/external/v1/api/send-code-otp', $object->getEndpoints()->forOTP());
-        $this->assertEquals('/external/v1/api/infos-client', $object->getEndpoints()->forClientInfo());
-        $this->assertEquals('/external/v1/api/hash256', $object->getEndpoints()->forHash());
+        $this->assertSame('/external/v1/api/operations/paiement-bien', $object->getEndpoints()->forTxnPayment());
+        $this->assertSame('/external/v1/api/send-code-otp', $object->getEndpoints()->forOTP());
+        $this->assertSame('/external/v1/api/infos-client', $object->getEndpoints()->forClientInfo());
+        $this->assertSame('/external/v1/api/hash256', $object->getEndpoints()->forHash());
     }
 
     public function test_has_api_endpoints_set_endpoints()
     {
-        $object = new HasApiEndpointsStub;
+        $object = new HasApiEndpointsStub();
         $object->useDefaultEndpoints();
         $endpoints = new Endpoints('/api/external/payment', '/api/external/otp', '/api/external/clients');
         $object->setEndpoints($endpoints);
-        $this->assertEquals('/api/external/payment', $object->getEndpoints()->forTxnPayment());
-        $this->assertEquals('/api/external/otp', $object->getEndpoints()->forOTP());
-        $this->assertEquals('/api/external/clients', $object->getEndpoints()->forClientInfo());
-        $this->assertEquals(null, $object->getEndpoints()->forHash());
+        $this->assertSame('/api/external/payment', $object->getEndpoints()->forTxnPayment());
+        $this->assertSame('/api/external/otp', $object->getEndpoints()->forOTP());
+        $this->assertSame('/api/external/clients', $object->getEndpoints()->forClientInfo());
+        $this->assertNull($object->getEndpoints()->forHash());
     }
 }

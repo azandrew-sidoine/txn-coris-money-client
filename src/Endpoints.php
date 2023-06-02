@@ -1,40 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Drewlabs package.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Drewlabs\Txn\Coris;
 
 class Endpoints implements EndpointsInterface
 {
     /**
-     * 
      * @var string
      */
     private $hashEndpoint;
 
     /**
-     * 
      * @var string
      */
     private $otpEndpoint;
 
     /**
-     * 
      * @var string
      */
     private $infoEndpoint;
 
     /**
-     * 
      * @var string
      */
     private $paymentEndpoint;
 
     /**
-     * Creates an instance of {@see \Drewlabs\Txn\Coris\Endpoints} class
-     * 
-     * @param string $payment 
-     * @param string $otp 
-     * @param string $info 
-     * @param string $hash 
+     * Creates an instance of {@see \Drewlabs\Txn\Coris\Endpoints} class.
+     *
+     * @param string $hash
      */
     public function __construct(string $payment, string $otp, string $info, string $hash = null)
     {
@@ -45,9 +49,9 @@ class Endpoints implements EndpointsInterface
     }
 
     /**
-     * Creates an endpoint instance using default server paths
-     * 
-     * @return EndpointsInterface 
+     * Creates an endpoint instance using default server paths.
+     *
+     * @return EndpointsInterface
      */
     public static function defaults()
     {
