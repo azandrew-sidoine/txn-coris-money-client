@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6195d8acf1f3d442e5a8a2637afd1076",
+    "content-hash": "aa2247dcef8ef0174db716e306c43c96",
     "packages": [
         {
             "name": "drewlabs/curl-client",
@@ -116,16 +116,16 @@
         },
         {
             "name": "drewlabs/txn-contracts",
-            "version": "v0.1.4",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azandrew-sidoine/php-txn-contracts.git",
-                "reference": "53d198f47cd90cfb752eec464f61ce22d427ccc7"
+                "reference": "a46d0f834d3a92915cd01c19ec2b46ad3e3204c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azandrew-sidoine/php-txn-contracts/zipball/53d198f47cd90cfb752eec464f61ce22d427ccc7",
-                "reference": "53d198f47cd90cfb752eec464f61ce22d427ccc7",
+                "url": "https://api.github.com/repos/azandrew-sidoine/php-txn-contracts/zipball/a46d0f834d3a92915cd01c19ec2b46ad3e3204c8",
+                "reference": "a46d0f834d3a92915cd01c19ec2b46ad3e3204c8",
                 "shasum": ""
             },
             "require-dev": {
@@ -150,9 +150,9 @@
             "description": "Transaction platform contract package",
             "support": {
                 "issues": "https://github.com/azandrew-sidoine/php-txn-contracts/issues",
-                "source": "https://github.com/azandrew-sidoine/php-txn-contracts/tree/v0.1.4"
+                "source": "https://github.com/azandrew-sidoine/php-txn-contracts/tree/v0.2.1"
             },
-            "time": "2022-12-08T16:37:55+00:00"
+            "time": "2023-06-12T14:01:34+00:00"
         },
         {
             "name": "symfony/process",

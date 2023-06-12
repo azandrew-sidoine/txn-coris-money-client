@@ -24,7 +24,7 @@
     "require": {
         "php": ">=7.0",
         "drewlabs/curl-client": "^0.1.9",
-        "drewlabs/txn-contracts": "^0.1.0",
+        "drewlabs/txn-contracts": "^0.2.1",
         "drewlabs/libman": "^0.1.7"
     },
     "require-dev": {
