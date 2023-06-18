@@ -65,16 +65,16 @@
         },
         {
             "name": "drewlabs/libman",
-            "version": "v0.2.2",
+            "version": "v0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azandrew-sidoine/php-libman.git",
-                "reference": "50ffe287bb6a70426296d897ec2824f9eb772cf6"
+                "reference": "f7f8a2d9433df2dbeeaf48226eafbe38aa839207"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azandrew-sidoine/php-libman/zipball/50ffe287bb6a70426296d897ec2824f9eb772cf6",
-                "reference": "50ffe287bb6a70426296d897ec2824f9eb772cf6",
+                "url": "https://api.github.com/repos/azandrew-sidoine/php-libman/zipball/f7f8a2d9433df2dbeeaf48226eafbe38aa839207",
+                "reference": "f7f8a2d9433df2dbeeaf48226eafbe38aa839207",
                 "shasum": ""
             },
             "require": {
@@ -110,9 +110,9 @@
             "description": "Libman package is a small PHP utility library used in installing, creating business specific class instance using configuration based approach",
             "support": {
                 "issues": "https://github.com/azandrew-sidoine/php-libman/issues",
-                "source": "https://github.com/azandrew-sidoine/php-libman/tree/v0.2.2"
+                "source": "https://github.com/azandrew-sidoine/php-libman/tree/v0.2.3"
             },
-            "time": "2023-06-18T17:52:48+00:00"
+            "time": "2023-06-18T18:08:08+00:00"
         },
         {
             "name": "drewlabs/txn-contracts",
