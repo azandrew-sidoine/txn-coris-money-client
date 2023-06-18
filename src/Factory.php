@@ -42,7 +42,7 @@ class Factory implements LibraryFactoryInterface
             });
         } else {
             // else we create the credentials factory from configuration values
-            list($apiKey, $apiToken) = [$config->getConfiguration()->get('credentials.name'), $config->getConfiguration()->get('credentials.token')];
+            list($apiKey, $apiToken) = [$config->getConfiguration()->get('credentials.name', $config->getConfiguration()->get('api.credentials.name')), $config->getConfiguration()->get('credentials.token', $config->getConfiguration()->get('api.credentials.token'))];
             if ((null !== $apiKey) && (null !== $apiToken)) {
                 $client->setCredentialsFactory(function () use ($apiKey, $apiToken) {
                     return new Credentials($apiKey, $apiToken);
