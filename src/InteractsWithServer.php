@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Drewlabs\Txn\Coris;
 
 use Drewlabs\Txn\Coris\Core\ClientInfo;
-use Drewlabs\Txn\Coris\Core\CorisGlobals;
 use Drewlabs\Txn\Exceptions\InvalidProcessorOTPException;
 use Drewlabs\Txn\Exceptions\MissingClientAccountException;
 use Drewlabs\Txn\Exceptions\ProcessTxnRequestException;
@@ -22,6 +21,9 @@ use Drewlabs\Txn\Exceptions\RequestException;
 use Drewlabs\Txn\TransactionalPaymentInterface;
 use Drewlabs\Txn\TransactionPaymentInterface;
 
+/**
+ * @mixin ConfigRespositoryAware
+ */
 trait InteractsWithServer
 {
     use HasApiCredentials;
@@ -160,7 +162,7 @@ trait InteractsWithServer
                 $iso,
                 $number,
                 /* Check if the codePV is not the transaction reference */
-                $accountPvCode = CorisGlobals::getInstance()->codePv() /* Code PV */,
+                $accountPvCode = $this->getSalePoint() /* Code PV */,
                 $amount = $txn->getValue(),
                 $otp = $txn->getOTP(),
                 $this->getApiToken()
@@ -287,5 +289,15 @@ trait InteractsWithServer
         }
 
         return [$iso, $number, $payeerid];
+    }
+
+    private function getSalePoint()
+    {
+        // The algorithm search for salePoint -> sale_point -> code_pv values in the configuration
+        return $this->getConfig('salePoint', function() {
+            return $this->getConfig('sale_point', function() {
+                return $this->getConfig('code_pv');
+            });
+        });
     }
 }

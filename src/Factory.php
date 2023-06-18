@@ -17,7 +17,6 @@ use Drewlabs\Libman\Contracts\AuthBasedLibraryConfigInterface;
 use Drewlabs\Libman\Contracts\LibraryConfigInterface;
 use Drewlabs\Libman\Contracts\LibraryFactoryInterface;
 use Drewlabs\Libman\Contracts\WebServiceLibraryConfigInterface;
-use Drewlabs\Txn\Coris\Core\CorisGlobals;
 use Drewlabs\Txn\Coris\Core\Credentials;
 
 class Factory implements LibraryFactoryInterface
@@ -31,13 +30,30 @@ class Factory implements LibraryFactoryInterface
      */
     public static function createInstance(LibraryConfigInterface $config)
     {
+        $hostname = ($config instanceof WebServiceLibraryConfigInterface) ? $config->getHost() : $config->getConfiguration()->get('api.host');
+
+        // Create new client instance
+        $client =  new Client($hostname, Endpoints::defaults());
+
+        // Set the authorization / authentication credentials
         if (($config instanceof AuthBasedLibraryConfigInterface) && ($auth = $config->getAuth())) {
-            CorisGlobals::getInstance()->setCredentialsFactory(static fn () => new Credentials($auth->id(), $auth->secret()));
+            $client->setCredentialsFactory(function () use ($auth) {
+                return new Credentials($auth->id(), $auth->secret());
+            });
+        } else {
+            // else we create the credentials factory from configuration values
+            list($apiKey, $apiToken) = [$config->getConfiguration()->get('credentials.name'), $config->getConfiguration()->get('credentials.token')];
+            if ((null !== $apiKey) && (null !== $apiToken)) {
+                $client->setCredentialsFactory(function () use ($apiKey, $apiToken) {
+                    return new Credentials($apiKey, $apiToken);
+                });
+            }
         }
 
-        return new Client(
-            ($config instanceof WebServiceLibraryConfigInterface) ? $config->getHost() : null,
-            Endpoints::defaults()
-        );
+        // Set the configuration repository instance for the client instance
+        $client = $client->setConfigRepository($config->getConfiguration());
+
+        // Return the contructed client
+        return $client;
     }
 }

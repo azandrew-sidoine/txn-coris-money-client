@@ -11,39 +11,39 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use Drewlabs\Txn\Coris\Core\CorisGlobals;
 use Drewlabs\Txn\Coris\Core\Credentials;
 use Drewlabs\Txn\Coris\Core\CredentialsInterface;
+use Drewlabs\Txn\Coris\HasApiCredentials;
 use PHPUnit\Framework\TestCase;
 
 class CorisGlobalsTest extends TestCase
 {
     public function test_coris_global_set_credentials_factory_set_the_credentials_instance()
     {
-        $this->getInstance()->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
-        $this->assertInstanceOf(CredentialsInterface::class, $this->getInstance()->getCredentials());
+        $instance = $this->getInstance();
+        $instance->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
+        $this->assertInstanceOf(CredentialsInterface::class, $instance->getCredentials());
     }
 
     public function test_coris_global_set_credentials_factory_set_the_api_token_value()
     {
-        $this->getInstance()->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
-        $this->assertSame('SuperKeySecret', $this->getInstance()->getCredentials()->getApiToken());
+        $instance = $this->getInstance();
+        $instance->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
+        $this->assertSame('SuperKeySecret', $instance->getCredentials()->getApiToken());
     }
 
     public function test_coris_global_set_credentials_factory_set_the_api_key_value()
     {
-        $this->getInstance()->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
-        $this->assertSame('keyid', $this->getInstance()->getCredentials()->getApiKey());
-    }
-
-    public function test_coris_global_set_code_pv()
-    {
-        $this->getInstance()->codePv('X7924-L9742');
-        $this->assertSame('X7924-L9742', $this->getInstance()->codePv());
+        $instance = $this->getInstance();
+        $instance->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
+        $this->assertSame('keyid', $instance->getCredentials()->getApiKey());
     }
 
     private function getInstance()
     {
-        return CorisGlobals::getInstance();
+        return new class()
+        {
+            use HasApiCredentials;
+        };
     }
 }

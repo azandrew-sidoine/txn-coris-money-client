@@ -3,7 +3,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 $header = <<<'HEADER'
-This file is part of the Drewlabs package.
+This file is part of the drewlabs namespace.
 
 (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
 
@@ -17,9 +17,6 @@ $rules = [
     '@PHP70Migration:risky' => true,
     '@PHP71Migration' => true,
     '@PHP71Migration:risky' => true,
-    '@PHP80Migration:risky' => true,
-    '@PHP81Migration' => true,
-    '@PHP82Migration' =>true,
     '@PHPUnit57Migration:risky' => true,
     '@PHPUnit60Migration:risky' => true,
     '@Symfony' => true,

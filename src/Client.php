@@ -23,6 +23,7 @@ use Drewlabs\Txn\TransactionResultListener;
 class Client implements ProcessorLibraryInterface, OneWayTransactionProcessorInterface, TransactionalProcessorLibraryInterface
 {
     use InteractsWithServer;
+    use ConfigRespositoryAware;
 
     /**
      * List of transaction response listeners.

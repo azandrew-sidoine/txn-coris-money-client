@@ -14,7 +14,6 @@ declare(strict_types=1);
 use Drewlabs\Libman\LibraryConfig;
 use Drewlabs\Libman\WebserviceLibraryConfig;
 use Drewlabs\Txn\Coris\Client;
-use Drewlabs\Txn\Coris\Core\CorisGlobals;
 use Drewlabs\Txn\Coris\Core\Credentials;
 use Drewlabs\Txn\Coris\Factory;
 use Drewlabs\Txn\ProcessorLibraryInterface;
@@ -44,13 +43,8 @@ class ClientFactoryTest extends TestCase
     {
         // Set the resolver to return empty credentials
         $factory = new Factory();
-        $client = $factory->createInstance(
-            LibraryConfig::new(
-                'coris-monet-client',
-                'composer'
-            )
-        );
-        CorisGlobals::getInstance()->setCredentialsFactory(static fn () => Credentials::empty());
+        $client = $factory->createInstance(LibraryConfig::new('coris-monet-client', 'composer'));
+        $client->setCredentialsFactory(static fn () => Credentials::empty());
         $this->assertInstanceOf(Client::class, $client);
         $this->assertInstanceOf(ProcessorLibraryInterface::class, $client);
         $this->assertTrue(null === $client->getApiClient());
