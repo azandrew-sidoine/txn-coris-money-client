@@ -44,7 +44,9 @@ class ClientFactoryTest extends TestCase
         // Set the resolver to return empty credentials
         $factory = new Factory();
         $client = $factory->createInstance(LibraryConfig::new('coris-monet-client', 'composer'));
-        $client->setCredentialsFactory(static fn () => Credentials::empty());
+        $client->setCredentialsFactory(function() {
+            return Credentials::empty();
+        });
         $this->assertInstanceOf(Client::class, $client);
         $this->assertInstanceOf(ProcessorLibraryInterface::class, $client);
         $this->assertTrue(null === $client->getApiClient());

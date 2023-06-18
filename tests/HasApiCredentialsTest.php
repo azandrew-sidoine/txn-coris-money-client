@@ -21,21 +21,27 @@ class HasApiCredentialsTest extends TestCase
     public function test_coris_global_set_credentials_factory_set_the_credentials_instance()
     {
         $instance = $this->getInstance();
-        $instance->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
+        $instance->setCredentialsFactory(static function() {
+            return new Credentials('keyid', 'SuperKeySecret');
+        });
         $this->assertInstanceOf(CredentialsInterface::class, $instance->getCredentials());
     }
 
     public function test_coris_global_set_credentials_factory_set_the_api_token_value()
     {
         $instance = $this->getInstance();
-        $instance->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
+        $instance->setCredentialsFactory(static function() {
+            return new Credentials('keyid', 'SuperKeySecret');
+        });
         $this->assertSame('SuperKeySecret', $instance->getCredentials()->getApiToken());
     }
 
     public function test_coris_global_set_credentials_factory_set_the_api_key_value()
     {
         $instance = $this->getInstance();
-        $instance->setCredentialsFactory(static fn () => new Credentials('keyid', 'SuperKeySecret'));
+        $instance->setCredentialsFactory(static function() {
+            return new Credentials('keyid', 'SuperKeySecret');
+        });
         $this->assertSame('keyid', $instance->getCredentials()->getApiKey());
     }
 
