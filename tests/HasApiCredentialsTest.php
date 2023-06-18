@@ -16,7 +16,7 @@ use Drewlabs\Txn\Coris\Core\CredentialsInterface;
 use Drewlabs\Txn\Coris\HasApiCredentials;
 use PHPUnit\Framework\TestCase;
 
-class CorisGlobalsTest extends TestCase
+class HasApiCredentialsTest extends TestCase
 {
     public function test_coris_global_set_credentials_factory_set_the_credentials_instance()
     {
