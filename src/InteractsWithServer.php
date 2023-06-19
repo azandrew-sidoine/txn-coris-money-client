@@ -32,7 +32,7 @@ trait InteractsWithServer
 
     public function requestOTP(string $payeerid)
     {
-        [$iso, $number] = $this->splitPayeerId($payeerid);
+        list($iso, $number) = $this->splitPayeerId($payeerid);
         if ((null === $iso) || (null === $number)) {
             throw new \UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
         }
@@ -150,7 +150,7 @@ trait InteractsWithServer
      */
     public function doProcessTxnPayment(TransactionPaymentInterface $transaction)
     {
-        [$iso, $number] = $this->resolvePayeerRequiredAttributes($transaction);
+        list($iso, $number) = $this->resolvePayeerRequiredAttributes($transaction);
         /**
          * @var TransactionalPaymentInterface&TransactionPaymentInterface
          */
@@ -262,7 +262,7 @@ trait InteractsWithServer
     {
         $exploded = false !== stripos($payeerid, '-') ? explode('-', $payeerid, 2) : explode(' ', $payeerid);
         if (2 === \count($exploded)) {
-            [$iso_code, $phone_number] = $exploded;
+            list($iso_code, $phone_number) = $exploded;
             $iso_code = '+' === $iso_code[0] ? substr($iso_code, 1) : ('00' === substr($iso_code, 0, 2) ? substr($iso_code, 2) : "$iso_code");
 
             return [$iso_code, $phone_number];
@@ -279,7 +279,7 @@ trait InteractsWithServer
     private function resolvePayeerRequiredAttributes(TransactionPaymentInterface $transaction)
     {
         $payeerid = $transaction->getFrom();
-        [$iso, $number] = $this->splitPayeerId($payeerid);
+        list($iso, $number) = $this->splitPayeerId($payeerid);
         if ((null === $iso) || (null === $number)) {
             throw new \UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
         }

@@ -59,7 +59,7 @@ trait HasApiCredentials
             // in case the developper will require the global instance
             $credentials = ($this->credentialsFactory)($this);
             if (!($credentials instanceof CredentialsInterface)) {
-                throw new \UnexpectedValueException('Provided credentials factory must return instance of '.CredentialsInterface::class.', got '.((null !== $credentials) && \is_object($credentials) ? $credentials::class : \gettype($credentials)));
+                throw new \UnexpectedValueException('Provided credentials factory must return instance of '.CredentialsInterface::class.', got '.((null !== $credentials) && \is_object($credentials) ? get_class($credentials) : \gettype($credentials)));
             }
             $this->credentials = $credentials;
         }
