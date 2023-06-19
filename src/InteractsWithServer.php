@@ -97,9 +97,8 @@ trait InteractsWithServer
      */
     public function getClientInfo(string $iso, string $number, string $hash = null)
     {
-        // TODO : Take a look a the documentation for the hash string when rerquesting OTP
-        $hash ??= $this->createHashString(sprintf('%s%s%s', $iso, $number, $this->getApiToken()));
-        // TODO : Get client information
+        $hash = null !== $hash ? $hash : $this->createHashString(sprintf('%s%s%s', $iso, $number, $this->getApiToken()));
+
         $this->resetCurl();
 
         // We create the REST endpoint by appending the request query to the request path
