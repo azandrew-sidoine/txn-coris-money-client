@@ -46,8 +46,10 @@ class Client implements ProcessorLibraryInterface, OneWayTransactionProcessorInt
      */
     public function __construct(string $host = null, EndpointsInterface $endpoints = null)
     {
-        $this->curl = new Curl($host);
+        $this->curl = new Curl();
+        $this->curl->followLocation();
         $this->endpoints = $endpoints;
+        $this->host = $host;
     }
 
     public function toProcessTransactionResult($response)

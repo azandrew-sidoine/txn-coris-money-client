@@ -30,7 +30,8 @@ class Factory implements LibraryFactoryInterface
      */
     public static function createInstance(LibraryConfigInterface $config)
     {
-        $hostname = ($config instanceof WebServiceLibraryConfigInterface) ? $config->getHost() : $config->getConfiguration()->get('api.host');
+        $host = ($config instanceof WebServiceLibraryConfigInterface) ? $config->getHost() : $config->getConfiguration()->get('api.host');
+        $hostname = sprintf("%s://%s", parse_url($host, PHP_URL_SCHEME), parse_url($host, \PHP_URL_HOST));
 
         // Create new client instance
 
