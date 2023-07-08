@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -44,7 +44,7 @@ class ClientFactoryTest extends TestCase
         // Set the resolver to return empty credentials
         $factory = new Factory();
         $client = $factory->createInstance(LibraryConfig::new('coris-monet-client', 'composer'));
-        $client->setCredentialsFactory(function() {
+        $client->setCredentialsFactory(static function () {
             return Credentials::empty();
         });
         $this->assertInstanceOf(Client::class, $client);

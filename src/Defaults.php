@@ -11,12 +11,17 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Drewlabs\Txn\Coris\Core;
+namespace Drewlabs\Txn\Coris;
 
-interface CredentialsFactory
+class Defaults
 {
     /**
-     * Creates client credentials instance.
+     * @var string
      */
-    public function __invoke(): CredentialsInterface;
+    public const API_BASE_PATH = 'external/v1/api';
+
+    /**
+     * @var string
+     */
+    public const API_228_BASE_PATH = 'external/228/v1/api';
 }

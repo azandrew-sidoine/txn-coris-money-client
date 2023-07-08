@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -29,18 +29,18 @@ class ClientTest extends TestCase
             'type' => 'composer',
             'auth' => [
                 'id' => 'coris',
-                'secret' => 'SuperSecret'
+                'secret' => 'SuperSecret',
             ],
             'configuration' => $config ?? [
                 'api' => [
-                    'host' => 'https://testbed.corismoney.com'  
+                    'host' => 'https://testbed.corismoney.com',
                 ],
                 'sale_point' => 'CNS98025042',
                 'credentials' => [
                     'name' => 'coris',
-                    'token' => 'SuperToken'
-                ]
-            ]
+                    'token' => 'SuperToken',
+                ],
+            ],
         ]));
         ($test)($client);
     }
@@ -80,6 +80,7 @@ class ClientTest extends TestCase
             $client->requestOTP('22661347475');
         });
     }
+
     public function test_coris_client_request_client_infos()
     {
         $this->expectException(RequestException::class);

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -36,6 +36,11 @@ class Endpoints implements EndpointsInterface
     private $paymentEndpoint;
 
     /**
+     * @var string
+     */
+    private $basePath;
+
+    /**
      * Creates an instance of {@see \Drewlabs\Txn\Coris\Endpoints} class.
      *
      * @param string $hash
@@ -46,40 +51,60 @@ class Endpoints implements EndpointsInterface
         $this->otpEndpoint = $otp;
         $this->paymentEndpoint = $payment;
         $this->infoEndpoint = $info;
+        $this->basePath = Defaults::API_BASE_PATH;
     }
 
     /**
      * Creates an endpoint instance using default server paths.
      *
-     * @return EndpointsInterface
+     * @return static
      */
     public static function defaults()
     {
-        return new self(
-            '/external/v1/api/operations/paiement-bien',
-            '/external/v1/api/send-code-otp',
-            '/external/v1/api/infos-client',
-            '/external/v1/api/hash256'
-        );
+        return new self('/operations/paiement-bien', '/send-code-otp', '/infos-client', '/hash256');
+    }
+
+    /**
+     * set tbe base path for endpoints.
+     *
+     * @return static
+     */
+    public function setBasePath(string $path)
+    {
+        $this->basePath = $path;
+
+        return $this;
     }
 
     public function forOTP(): string
     {
-        return $this->otpEndpoint;
+        $endpoint = trim($this->otpEndpoint ?? '', '/');
+        $basePath = trim($this->basePath ?? '', '/');
+
+        return sprintf('/%s/%s', $basePath, $endpoint);
     }
 
     public function forTxnPayment(): string
     {
-        return $this->paymentEndpoint;
+        $endpoint = trim($this->paymentEndpoint ?? '', '/');
+        $basePath = trim($this->basePath ?? '', '/');
+
+        return sprintf('/%s/%s', $basePath, $endpoint);
     }
 
     public function forClientInfo(): string
     {
-        return $this->infoEndpoint;
+        $endpoint = trim($this->infoEndpoint ?? '', '/');
+        $basePath = trim($this->basePath ?? '', '/');
+
+        return sprintf('/%s/%s', $basePath, $endpoint);
     }
 
     public function forHash()
     {
-        return $this->hashEndpoint;
+        $endpoint = trim($this->hashEndpoint ?? '', '/');
+        $basePath = trim($this->basePath ?? '', '/');
+
+        return sprintf('/%s/%s', $basePath, $endpoint);
     }
 }

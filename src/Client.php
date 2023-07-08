@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -22,8 +22,8 @@ use Drewlabs\Txn\TransactionResultListener;
 
 class Client implements ProcessorLibraryInterface, OneWayTransactionProcessorInterface, TransactionalProcessorLibraryInterface
 {
-    use InteractsWithServer;
     use ConfigRespositoryAware;
+    use InteractsWithServer;
 
     /**
      * List of transaction response listeners.
@@ -44,10 +44,8 @@ class Client implements ProcessorLibraryInterface, OneWayTransactionProcessorInt
      *
      * @return void
      */
-    public function __construct(
-        string $host = null,
-        EndpointsInterface $endpoints = null
-    ) {
+    public function __construct(string $host = null, EndpointsInterface $endpoints = null)
+    {
         $this->curl = new Curl($host);
         $this->endpoints = $endpoints;
     }

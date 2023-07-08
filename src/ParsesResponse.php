@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -30,8 +30,8 @@ trait ParsesResponse
         $httpHeaders = [];
         $httpHeaders['Request-Line'] = reset($list) ?? '';
         for ($i = 1; $i < \count($list); ++$i) {
-            if (false !== strpos($list[$i], ':')) {
-                list($key, $value) = array_map(function($item) {
+            if (str_contains($list[$i], ':')) {
+                [$key, $value] = array_map(static function ($item) {
                     return $item ? trim($item) : null;
                 }, explode(':', $list[$i], 2));
                 $httpHeaders[$key] = $value;

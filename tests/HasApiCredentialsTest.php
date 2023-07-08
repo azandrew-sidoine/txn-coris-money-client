@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -21,7 +21,7 @@ class HasApiCredentialsTest extends TestCase
     public function test_coris_global_set_credentials_factory_set_the_credentials_instance()
     {
         $instance = $this->getInstance();
-        $instance->setCredentialsFactory(static function() {
+        $instance->setCredentialsFactory(static function () {
             return new Credentials('keyid', 'SuperKeySecret');
         });
         $this->assertInstanceOf(CredentialsInterface::class, $instance->getCredentials());
@@ -30,7 +30,7 @@ class HasApiCredentialsTest extends TestCase
     public function test_coris_global_set_credentials_factory_set_the_api_token_value()
     {
         $instance = $this->getInstance();
-        $instance->setCredentialsFactory(static function() {
+        $instance->setCredentialsFactory(static function () {
             return new Credentials('keyid', 'SuperKeySecret');
         });
         $this->assertSame('SuperKeySecret', $instance->getCredentials()->getApiToken());
@@ -39,7 +39,7 @@ class HasApiCredentialsTest extends TestCase
     public function test_coris_global_set_credentials_factory_set_the_api_key_value()
     {
         $instance = $this->getInstance();
-        $instance->setCredentialsFactory(static function() {
+        $instance->setCredentialsFactory(static function () {
             return new Credentials('keyid', 'SuperKeySecret');
         });
         $this->assertSame('keyid', $instance->getCredentials()->getApiKey());
@@ -47,8 +47,7 @@ class HasApiCredentialsTest extends TestCase
 
     private function getInstance()
     {
-        return new class()
-        {
+        return new class() {
             use HasApiCredentials;
         };
     }

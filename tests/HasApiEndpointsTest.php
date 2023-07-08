@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -31,11 +31,12 @@ class HasApiEndpointsTest extends TestCase
     {
         $object = new HasApiEndpointsStub();
         $object->useDefaultEndpoints();
-        $endpoints = new Endpoints('/api/external/payment', '/api/external/otp', '/api/external/clients');
+        $endpoints = new Endpoints('/payment', '/otp', '/clients');
+        $endpoints->setBasePath('/api/external');
         $object->setEndpoints($endpoints);
         $this->assertSame('/api/external/payment', $object->getEndpoints()->forTxnPayment());
         $this->assertSame('/api/external/otp', $object->getEndpoints()->forOTP());
         $this->assertSame('/api/external/clients', $object->getEndpoints()->forClientInfo());
-        $this->assertNull($object->getEndpoints()->forHash());
+        $this->assertSame('/api/external/', $object->getEndpoints()->forHash());
     }
 }

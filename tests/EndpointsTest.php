@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -19,17 +19,19 @@ class EndpointsTest extends TestCase
 {
     public function test_endpoints_contructor_runs_wihtout_error()
     {
-        $endpoints = new Endpoints('/api/external/payment', '/api/external/otp', '/api/external/users');
+        $endpoints = new Endpoints('payment', 'otp', 'users');
+        $endpoints->setBasePath('api/external');
         $this->assertInstanceOf(EndpointsInterface::class, $endpoints);
     }
 
     public function test_endpoints_getters_methods()
     {
-        $endpoints = new Endpoints('/api/external/payment', '/api/external/otp', '/api/external/clients');
+        $endpoints = new Endpoints('/payment', '/otp', '/clients');
+        $endpoints->setBasePath('api/external');
         $this->assertSame('/api/external/payment', $endpoints->forTxnPayment());
         $this->assertSame('/api/external/otp', $endpoints->forOTP());
         $this->assertSame('/api/external/clients', $endpoints->forClientInfo());
-        $this->assertNull($endpoints->forHash());
+        $this->assertSame('/api/external/', $endpoints->forHash());
     }
 
     public function test_default_endpoints_getters()

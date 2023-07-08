@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -33,18 +33,24 @@ class Factory implements LibraryFactoryInterface
         $hostname = ($config instanceof WebServiceLibraryConfigInterface) ? $config->getHost() : $config->getConfiguration()->get('api.host');
 
         // Create new client instance
-        $client =  new Client($hostname, Endpoints::defaults());
+
+        // #region Set endpoints base path
+        $endpoints = Endpoints::defaults();
+        $endpoints->setBasePath($config->getConfiguration()->get('api.paths.base') ?? Defaults::API_228_BASE_PATH);
+        // #endregion Set endpoints base path
+
+        $client = new Client($hostname, $endpoints);
 
         // Set the authorization / authentication credentials
         if (($config instanceof AuthBasedLibraryConfigInterface) && ($auth = $config->getAuth())) {
-            $client->setCredentialsFactory(function () use ($auth) {
+            $client->setCredentialsFactory(static function () use ($auth) {
                 return new Credentials($auth->id(), $auth->secret());
             });
         } else {
             // else we create the credentials factory from configuration values
-            list($apiKey, $apiToken) = [$config->getConfiguration()->get('credentials.name', $config->getConfiguration()->get('api.credentials.name')), $config->getConfiguration()->get('credentials.token', $config->getConfiguration()->get('api.credentials.token'))];
+            [$apiKey, $apiToken] = [$config->getConfiguration()->get('credentials.name', $config->getConfiguration()->get('api.credentials.name')), $config->getConfiguration()->get('credentials.token', $config->getConfiguration()->get('api.credentials.token'))];
             if ((null !== $apiKey) && (null !== $apiToken)) {
-                $client->setCredentialsFactory(function () use ($apiKey, $apiToken) {
+                $client->setCredentialsFactory(static function () use ($apiKey, $apiToken) {
                     return new Credentials($apiKey, $apiToken);
                 });
             }

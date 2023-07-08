@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -17,7 +17,6 @@ use Drewlabs\Txn\Coris\Core\CredentialsInterface;
 
 trait HasApiCredentials
 {
-
     /**
      * @var \Closure($client = null): CredentialsInterface
      */
@@ -29,10 +28,9 @@ trait HasApiCredentials
     private $credentials;
 
     /**
-     * set credentials factory instance
-     * 
-     * @param callable $factory 
-     * @return static 
+     * set credentials factory instance.
+     *
+     * @return static
      */
     public function setCredentialsFactory(callable $factory)
     {
@@ -42,6 +40,7 @@ trait HasApiCredentials
         if (null !== $this->credentials) {
             $this->credentials = null;
         }
+
         return $this;
     }
 
@@ -59,7 +58,7 @@ trait HasApiCredentials
             // in case the developper will require the global instance
             $credentials = ($this->credentialsFactory)($this);
             if (!($credentials instanceof CredentialsInterface)) {
-                throw new \UnexpectedValueException('Provided credentials factory must return instance of '.CredentialsInterface::class.', got '.((null !== $credentials) && \is_object($credentials) ? get_class($credentials) : \gettype($credentials)));
+                throw new \UnexpectedValueException('Provided credentials factory must return instance of '.CredentialsInterface::class.', got '.((null !== $credentials) && \is_object($credentials) ? $credentials::class : \gettype($credentials)));
             }
             $this->credentials = $credentials;
         }

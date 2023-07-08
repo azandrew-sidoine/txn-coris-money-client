@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -32,7 +32,7 @@ trait InteractsWithServer
 
     public function requestOTP(string $payeerid)
     {
-        list($iso, $number) = $this->splitPayeerId($payeerid);
+        [$iso, $number] = $this->splitPayeerId($payeerid);
         if ((null === $iso) || (null === $number)) {
             throw new \UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
         }
@@ -150,7 +150,7 @@ trait InteractsWithServer
      */
     public function doProcessTxnPayment(TransactionPaymentInterface $transaction)
     {
-        list($iso, $number) = $this->resolvePayeerRequiredAttributes($transaction);
+        [$iso, $number] = $this->resolvePayeerRequiredAttributes($transaction);
         /**
          * @var TransactionalPaymentInterface&TransactionPaymentInterface
          */
@@ -262,7 +262,7 @@ trait InteractsWithServer
     {
         $exploded = false !== stripos($payeerid, '-') ? explode('-', $payeerid, 2) : explode(' ', $payeerid);
         if (2 === \count($exploded)) {
-            list($iso_code, $phone_number) = $exploded;
+            [$iso_code, $phone_number] = $exploded;
             $iso_code = '+' === $iso_code[0] ? substr($iso_code, 1) : ('00' === substr($iso_code, 0, 2) ? substr($iso_code, 2) : "$iso_code");
 
             return [$iso_code, $phone_number];
@@ -279,7 +279,7 @@ trait InteractsWithServer
     private function resolvePayeerRequiredAttributes(TransactionPaymentInterface $transaction)
     {
         $payeerid = $transaction->getFrom();
-        list($iso, $number) = $this->splitPayeerId($payeerid);
+        [$iso, $number] = $this->splitPayeerId($payeerid);
         if ((null === $iso) || (null === $number)) {
             throw new \UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
         }
@@ -293,8 +293,8 @@ trait InteractsWithServer
     private function getSalePoint()
     {
         // The algorithm search for salePoint -> sale_point -> code_pv values in the configuration
-        return $this->getConfig('salePoint', function() {
-            return $this->getConfig('sale_point', function() {
+        return $this->getConfig('salePoint', function () {
+            return $this->getConfig('sale_point', function () {
                 return $this->getConfig('code_pv');
             });
         });

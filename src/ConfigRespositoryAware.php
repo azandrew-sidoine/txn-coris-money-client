@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Drewlabs package.
+ * This file is part of the drewlabs namespace.
  *
  * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
  *
@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Drewlabs\Txn\Coris;
 
-
 use Drewlabs\Libman\Contracts\RepositoryInterface;
 
 trait ConfigRespositoryAware
@@ -21,22 +20,21 @@ trait ConfigRespositoryAware
     private $configRepository;
 
     /**
-     * set the configuration repository for the current instance
-     * 
-     * @param RepositoryInterface $repository 
-     * 
-     * @return static 
+     * set the configuration repository for the current instance.
+     *
+     * @return static
      */
     public function setConfigRepository(RepositoryInterface $repository)
     {
         $this->configRepository = $repository;
+
         return $this;
     }
 
     /**
-     * returns the configuration repository for the current instance
-     * 
-     * @return RepositoryInterface 
+     * returns the configuration repository for the current instance.
+     *
+     * @return RepositoryInterface
      */
     public function getConfigRepository()
     {
@@ -44,15 +42,15 @@ trait ConfigRespositoryAware
     }
 
     /**
-     * resolve value for the `$name` key from the repository
-     * 
-     * @param string $name 
-     * @param mixed $default 
-     * @return mixed 
+     * resolve value for the `$name` key from the repository.
+     *
+     * @param mixed $default
+     *
+     * @return mixed
      */
     public function getConfig(string $name, $default = null)
     {
-        $default = !is_string($default) && is_callable($default) ? $default : function() use ($default) {
+        $default = !\is_string($default) && \is_callable($default) ? $default : static function () use ($default) {
             return $default;
         };
         if (null === $this->configRepository) {
