@@ -45,13 +45,7 @@ class ClientAccount
      */
     public static function create(\SimpleXMLElement $xml)
     {
-        return new static(
-            $xml->{'typeCompte'},
-            $xml->{'numeroCompte'},
-            $xml->{'prenom'},
-            $xml->{'nom'},
-            $xml->{'sexe'}
-        );
+        return new static((string) $xml->{'typeCompte'}, (string) $xml->{'numeroCompte'});
     }
 
     /**

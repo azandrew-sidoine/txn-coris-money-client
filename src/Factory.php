@@ -31,7 +31,7 @@ class Factory implements LibraryFactoryInterface
     public static function createInstance(LibraryConfigInterface $config)
     {
         $host = ($config instanceof WebServiceLibraryConfigInterface) ? $config->getHost() : $config->getConfiguration()->get('api.host');
-        $hostname = sprintf("%s://%s", parse_url($host, PHP_URL_SCHEME), parse_url($host, \PHP_URL_HOST));
+        $hostname = sprintf('%s://%s', parse_url($host, \PHP_URL_SCHEME), parse_url($host, \PHP_URL_HOST));
 
         // Create new client instance
 
@@ -49,7 +49,7 @@ class Factory implements LibraryFactoryInterface
             });
         } else {
             // else we create the credentials factory from configuration values
-            [$apiKey, $apiToken] = [$config->getConfiguration()->get('credentials.name', $config->getConfiguration()->get('api.credentials.name')), $config->getConfiguration()->get('credentials.token', $config->getConfiguration()->get('api.credentials.token'))];
+            [$apiKey, $apiToken] = [$config->getConfiguration()->get('credentials.name') ?? $config->getConfiguration()->get('api.credentials.name'), $config->getConfiguration()->get('credentials.token') ?? $config->getConfiguration()->get('api.credentials.token')];
             if ((null !== $apiKey) && (null !== $apiToken)) {
                 $client->setCredentialsFactory(static function () use ($apiKey, $apiToken) {
                     return new Credentials($apiKey, $apiToken);

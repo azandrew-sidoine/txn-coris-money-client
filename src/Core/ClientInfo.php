@@ -100,16 +100,16 @@ class ClientInfo
     public static function create(\SimpleXMLElement $xml)
     {
         $object = new static(
-            $xml->{'codeAgence'}->__toString(),
-            $xml->{'typeClient'},
-            $xml->{'prenom'},
-            $xml->{'nom'},
-            $xml->{'sexe'}
+            (string) $xml->{'codeAgence'},
+            (string) $xml->{'typeClient'},
+            (string) $xml->{'prenom'},
+            (string) $xml->{'nom'},
+            (string) $xml->{'sexe'},
         );
-        $object->iddoc($xml->{'piece'});
-        // TODO : Check more that one account possibilities
+        $object->iddoc((string) $xml->{'piece'});
+
         $object->account(ClientAccount::create($xml->{'listCompte'}));
-        $object->ref($xml->{'reference'});
+        $object->ref((string) $xml->{'reference'});
 
         return $object;
     }

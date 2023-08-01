@@ -29,17 +29,20 @@ class ClientTest extends TestCase
             'type' => 'composer',
             'auth' => [
                 'id' => 'coris',
-                'secret' => 'SuperSecret',
+                'secret' => 'CorisSecret',
             ],
-            'configuration' => $config ?? [
+            'configuration' => [
                 'api' => [
-                    'host' => 'https://testbed.corismoney.com',
+                    'host' => 'http://127.0.0.1',
+                    'credentials' => [
+                        'name' => 'coris',
+                        'token' => 'CorisSecret',
+                    ],
+                    'paths' => [
+                        'base' => 'base/path',
+                    ],
                 ],
-                'sale_point' => 'CNS98025042',
-                'credentials' => [
-                    'name' => 'coris',
-                    'token' => 'SuperToken',
-                ],
+                'sale_point' => '8035542',
             ],
         ]));
         ($test)($client);

@@ -26,15 +26,14 @@ use Drewlabs\Txn\TransactionPaymentInterface;
  */
 trait InteractsWithServer
 {
+    use HasApiCredentials;
+    use HasApiEndpoints;
+    use ParsesResponse;
 
     /**
      * @var string
      */
     private $host;
-
-    use HasApiCredentials;
-    use HasApiEndpoints;
-    use ParsesResponse;
 
     public function requestOTP(string $payeerid)
     {
@@ -48,7 +47,7 @@ trait InteractsWithServer
         $this->resetCurl();
 
         // We create the REST endpoint by appending the request query to the request path
-        $endpoint = $this->getEndpoints()->forOTP() . '?' . http_build_query([
+        $endpoint = $this->getEndpoints()->forOTP().'?'.http_build_query([
             'codePays' => $iso,
             'telephone' => $number,
         ], '', '&', \PHP_QUERY_RFC3986);
@@ -77,7 +76,7 @@ trait InteractsWithServer
         if (null !== ($text = ($response['text'] ?? null)) && \is_string($text)) {
             return true;
         }
-        throw new RequestException("/GET $url : " . $response['msg'] ?? 'Unkown request error');
+        throw new RequestException("/GET $url : ".$response['msg'] ?? 'Unkown request error');
     }
 
     /**
@@ -99,7 +98,7 @@ trait InteractsWithServer
         $this->resetCurl();
 
         // We create the REST endpoint by appending the request query to the request path
-        $endpoint = $this->getEndpoints()->forClientInfo() . '?' . http_build_query([
+        $endpoint = $this->getEndpoints()->forClientInfo().'?'.http_build_query([
             'codePays' => $iso,
             'telephone' => $number,
         ], '', '&', \PHP_QUERY_RFC3986);
@@ -124,16 +123,16 @@ trait InteractsWithServer
             $this->parseHeaders($this->curl->getResponseHeaders())
         );
         if (1 === (int) ($response['code'] ?? null)) {
-            throw new RequestException("/GET $url: " . ($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
+            throw new RequestException("/GET $url: ".($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
         }
         if ((-1 === (int) ($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'client inexistant'))) {
-            throw new MissingClientAccountException("/GET $url: " . ($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
+            throw new MissingClientAccountException("/GET $url: ".($response['message'] ?? $response['msg'] ?? 'Unknown request error'));
         }
         if (null !== ($text = ($response['text'] ?? null)) && \is_string($text)) {
             return ClientInfo::create(simplexml_load_string($text));
         }
 
-        throw new RequestException("/GET $url : " . ($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
+        throw new RequestException("/GET $url : ".($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
     }
 
     /**
@@ -167,7 +166,7 @@ trait InteractsWithServer
         );
         $this->resetCurl();
         // We create the REST endpoint by appending the request query to the request path
-        $endpoint = $this->getEndpoints()->forTxnPayment() . '?' . http_build_query([
+        $endpoint = $this->getEndpoints()->forTxnPayment().'?'.http_build_query([
             'codePays' => $iso,
             'telephone' => $number,
             'codePv' => $accountPvCode,
@@ -197,14 +196,14 @@ trait InteractsWithServer
         }
 
         if (1 === (int) ($response['code'] ?? null)) {
-            throw new ProcessTxnRequestException($txn, "/POST $url: " . $response['message'] ?? $response['msg'] ?? 'Unknown request error');
+            throw new ProcessTxnRequestException($txn, "/POST $url: ".$response['message'] ?? $response['msg'] ?? 'Unknown request error');
         }
 
         if ((-1 === (int) ($response['code'] ?? null)) || (false !== strstr($response['message'] ?? $response['msg'] ?? '', 'OTP Incorrect'))) {
             throw new InvalidProcessorOTPException($response['message'] ?? $response['msg'] ?? 'Unknown request error');
         }
         if ((null === ($response['code'] ?? null)) || (null === ($response['transactionId'] ?? null))) {
-            throw new RequestException("/GET $url : " . ($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
+            throw new RequestException("/GET $url : ".($response['msg'] ?? $response['message'] ?? 'Unkown request error'));
         }
         $result = $this->toProcessTransactionResult(array_merge($response ?? [], ['payment' => $txn]));
         if (!empty($this->responseListeners)) {
@@ -233,7 +232,7 @@ trait InteractsWithServer
         if (null === ($hash = $this->getEndpoints()->forHash())) {
             return $this->computeHash($plainText);
         }
-        $endpoint = $hash . "?originalString=$plainText";
+        $endpoint = $hash."?originalString=$plainText";
         $this->resetCurl();
         $this->curl->send([
             'method' => 'GET',
@@ -282,7 +281,7 @@ trait InteractsWithServer
             throw new \UnexpectedValueException("Payeer id $payeerid is not valid. Payeer id must be in form of (isocode phonenumber) or (isocode-phonnumber) in order to be valid");
         }
         if (!($transaction instanceof TransactionalPaymentInterface)) {
-            throw new \UnexpectedValueException('Cannot process transaction: ' . $transaction->getId());
+            throw new \UnexpectedValueException('Cannot process transaction: '.$transaction->getId());
         }
 
         return [$iso, $number, $payeerid];
@@ -299,13 +298,12 @@ trait InteractsWithServer
     }
 
     /**
-     * return the request url for the given path
-     * 
-     * @param string $path 
-     * @return string 
+     * return the request url for the given path.
+     *
+     * @return string
      */
     private function getRequestURL(string $path)
     {
-        return rtrim($this->host, '/') . (empty($path) ? '' : ('/' . ltrim($path, '/')));
+        return rtrim($this->host, '/').(empty($path) ? '' : ('/'.ltrim($path, '/')));
     }
 }
