@@ -79,7 +79,7 @@ class TransactionResult implements ProcessTransactionResultInterface
 
     public function processedAt()
     {
-        return \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', date('Y-m-y H:i:s', isset($this->processedAt) ? strtotime($this->processedAt) : time()));
+        return \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', isset($this->processedAt) ? strtotime($this->processedAt) : time()));
     }
 
     public function getStatusText()
