@@ -79,9 +79,9 @@ class ClientInfo
         string $type,
         string $firstname,
         string $lastname,
-        string $sex = null,
-        ClientAccount $account = null,
-        string $ref = null
+        ?string $sex = null,
+        ?ClientAccount $account = null,
+        ?string $ref = null
     ) {
         $this->agence = $agence;
         $this->type = $type;
@@ -135,7 +135,7 @@ class ClientInfo
      *
      * @return string
      */
-    public function firstname(string $value = null)
+    public function firstname(?string $value = null)
     {
         if (null !== $value) {
             $this->firstname = (string) $value;
@@ -149,7 +149,7 @@ class ClientInfo
      *
      * @return string
      */
-    public function lastname(string $value = null)
+    public function lastname(?string $value = null)
     {
         if (null !== $value) {
             $this->lastname = (string) $value;
@@ -163,7 +163,7 @@ class ClientInfo
      *
      * @return string
      */
-    public function sex(string $value = null)
+    public function sex(?string $value = null)
     {
         if (null !== $value) {
             $this->sex = (string) $value;
@@ -177,7 +177,7 @@ class ClientInfo
      *
      * @return string
      */
-    public function iddoc(string $value = null)
+    public function iddoc(?string $value = null)
     {
         if (null !== $value) {
             $this->iddoc = (string) $value;
@@ -191,7 +191,7 @@ class ClientInfo
      *
      * @return string
      */
-    public function ref(string $value = null)
+    public function ref(?string $value = null)
     {
         if (null !== $value) {
             $this->reference = (string) $value;
@@ -205,7 +205,7 @@ class ClientInfo
      *
      * @return string
      */
-    public function type(string $value = null)
+    public function type(?string $value = null)
     {
         if (null !== $value) {
             $this->type = (string) $value;
@@ -219,7 +219,7 @@ class ClientInfo
      *
      * @return string
      */
-    public function account(ClientAccount $value = null)
+    public function account(?ClientAccount $value = null)
     {
         if (null !== $value) {
             $this->account = $value;

@@ -41,11 +41,9 @@ class Endpoints implements EndpointsInterface
     private $basePath;
 
     /**
-     * Creates an instance of {@see \Drewlabs\Txn\Coris\Endpoints} class.
-     *
-     * @param string $hash
+     * Creates an instance of {@see Endpoints} class.
      */
-    public function __construct(string $payment, string $otp, string $info, string $hash = null)
+    public function __construct(string $payment, string $otp, string $info, ?string $hash = null)
     {
         $this->hashEndpoint = $hash;
         $this->otpEndpoint = $otp;

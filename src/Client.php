@@ -25,26 +25,20 @@ class Client implements ProcessorLibraryInterface, OneWayTransactionProcessorInt
     use ConfigRespositoryAware;
     use InteractsWithServer;
 
-    /**
-     * List of transaction response listeners.
-     *
-     * @var array
-     */
+    /** @var array List of transaction response listeners. */
     private $responseListeners = [];
 
-    /**
-     * @var Curl
-     */
+    /** @var Curl */
     private $curl;
 
     /**
-     * Creates a {@see \Drewlabs\Txn\Coris\Client} instance.
+     * Creates a {@see Client} instance.
      *
      * @throws \InvalidArgumentException
      *
      * @return void
      */
-    public function __construct(string $host = null, EndpointsInterface $endpoints = null)
+    public function __construct(?string $host = null, ?EndpointsInterface $endpoints = null)
     {
         $this->curl = new Curl();
         $this->curl->followLocation();

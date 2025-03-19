@@ -49,7 +49,7 @@ class TransactionResult implements ProcessTransactionResultInterface
      * @param string|null $processedAt
      */
     public function __construct(
-        TransactionPaymentInterface $payment = null,
+        ?TransactionPaymentInterface $payment,
         $code,
         string $message,
         $pTxnId,

@@ -91,7 +91,7 @@ trait InteractsWithServer
      *
      * @return ClientInfo
      */
-    public function getClientInfo(string $iso, string $number, string $hash = null)
+    public function getClientInfo(string $iso, string $number, ?string $hash = null)
     {
         $hash = null !== $hash ? $hash : $this->computeHash(sprintf('%s%s%s', $iso, $number, $this->getApiToken()));
 
@@ -241,6 +241,7 @@ trait InteractsWithServer
                 'clientId' => $this->getApiClient(),
             ],
         ]);
+        
         if (200 !== ($statusCode = $this->curl->getStatusCode())) {
             throw new RequestException("/GET $url : Request error", $statusCode);
         }

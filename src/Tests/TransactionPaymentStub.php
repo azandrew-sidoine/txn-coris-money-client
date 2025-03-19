@@ -47,8 +47,8 @@ class TransactionPaymentStub implements TransactionPaymentInterface, Transaction
         string $from,
         string $ref,
         float $value = 10000,
-        string $id = null,
-        string $otp = null
+        ?string $id = null,
+        ?string $otp = null
     ) {
         $this->from = $from;
         $this->ref = $ref;
